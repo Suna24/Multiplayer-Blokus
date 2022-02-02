@@ -8,7 +8,12 @@ io.listen(port);
 
 console.log('Le serveur à bien démarré et écoute sur le port ' + port);
 
-//Fermeture du serveur
-io.close();
+io.on('connection', (socket) => {
+    console.log("Connection effectuée par un joueur");
+})
 
-console.log('Le serveur a bien été fermé');
+
+//Fermeture du serveur
+/*io.close();
+
+console.log('Le serveur a bien été fermé');*/
