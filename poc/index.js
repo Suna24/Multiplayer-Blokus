@@ -11,4 +11,13 @@ wss.on('listening', () => {
 
 wss.on('connection', (ws) => {
     console.log("Connection effectuée");
+
+    ws.on('close', () => {
+        console.log("Déconnection effectuée");
+    })
+
+})
+
+wss.on('close', (ws) => {
+    console.log("Le serveur a bien été éteint");
 })

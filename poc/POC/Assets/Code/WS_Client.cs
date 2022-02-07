@@ -16,6 +16,11 @@ public class WS_Client : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-
     }
+
+    private void OnApplicationQuit()
+    {
+        webSocket.Close();
+    }
+
 }
