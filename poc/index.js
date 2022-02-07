@@ -1,19 +1,14 @@
 //Importations utiles
-const {Server} = require('socket.io');
-const port = Number(process.env.port) || 3000;
+const WebSocket = require('ws');
 
-//Création du serveur et écoute sur un port
-const io = new Server();
-io.listen(port);
+const wss = new WebSocket.Server({port:3000}, () =>{
+    console.log("Le serveur a bien démarré");
+})
 
-console.log('Le serveur à bien démarré et écoute sur le port ' + port);
+wss.on('listening', () => {
+    console.log("Le serveur écoute sur le port 3000");
+})
 
-//Gestion lors de la connection d'un joueur
-io.on('connection', (socket) => {  
-    console.log("Connecté ? : " + socket.connected);
-    console.log("Connection effectuée par un joueur");
-
-    socket.conn.on('close', (raison) => {  
-        console.log("Déconnection effectuée par un joueur");
-    })
+wss.on('connection', (ws) => {
+    console.log("Connection effectuée");
 })
