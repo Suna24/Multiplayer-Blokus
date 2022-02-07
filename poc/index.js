@@ -22,6 +22,10 @@ wss.on('connection', (ws, req) => {
 
         nombreDeJoueurs = nombreDeJoueurs + 1;
 
+        ws.on('message', (data) => {
+            console.log(id + " a envoyé un message : " + data);
+        })
+
         ws.on('close', () => {
             console.log("Déconnection effectuée par " + id);
             nombreDeJoueurs = nombreDeJoueurs - 1;

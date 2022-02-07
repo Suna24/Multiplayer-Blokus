@@ -1,6 +1,5 @@
 using UnityEngine;
 using WebSocketSharp;
-
 public class WS_Client : MonoBehaviour
 {
 
@@ -16,6 +15,10 @@ public class WS_Client : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (Input.GetKeyUp(KeyCode.Space))
+        {
+            webSocket.Send("Bonjour !");
+        }
     }
 
     private void OnApplicationQuit()
