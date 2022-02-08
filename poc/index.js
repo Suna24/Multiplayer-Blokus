@@ -23,7 +23,14 @@ wss.on('connection', (ws, req) => {
         nombreDeJoueurs = nombreDeJoueurs + 1;
 
         ws.on('message', (data) => {
+
             console.log(id + " a envoyé un message : " + data);
+
+            wss.clients.forEach(function each(client) {
+                if (client.readyState === WebSocket.OPEN) {
+                  client.send(data.toString());
+                }
+            });
         })
 
         ws.on('close', () => {
