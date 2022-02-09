@@ -24,8 +24,18 @@ wss.on('connection', (ws, req) => {
 
         ws.on('message', (data) => {
 
-            console.log(id + " a envoyé un message : " + data);
+            let resultat = IsJsonString(data);
 
+            if(resultat == false){
+
+                console.log(id + " a envoyé un message : " + data);
+
+            } else {
+                
+                console.log(JSON.parse(data));
+            }
+
+            //Envoi du message en broadcast
             wss.clients.forEach(function each(client) {
                 if (client.readyState === WebSocket.OPEN) {
                   client.send(data.toString());
@@ -48,3 +58,13 @@ wss.on('connection', (ws, req) => {
 wss.on('close', (ws) => {
     console.log("Le serveur a bien été éteint");
 })
+
+//Regarde si une entrée est parsable ou non
+function IsJsonString(chaine) {
+    try {
+      var json = JSON.parse(chaine);
+      return (typeof json === 'object');
+    } catch (e) {
+      return false;
+    }
+}

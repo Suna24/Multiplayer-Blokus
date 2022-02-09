@@ -16,7 +16,7 @@ public class WS_Client : MonoBehaviour
 
         webSocket.OnMessage += (sender, e) =>
         {
-            Debug.Log("Message du serveur " + e.Data);
+            Debug.Log("Message du serveur broadcast : " + e.Data);
         };
 
         //Gestion du joueur

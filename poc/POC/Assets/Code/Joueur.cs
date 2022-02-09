@@ -1,13 +1,12 @@
 using System;
-using UnityEngine;
 
 [Serializable]
-public class Joueur : MonoBehaviour
+public class Joueur
 {
     //Attributs
-    private string nom { get; }
-    private int score { get; }
-    private string couleurJouee { get; }
+    public string nom;
+    public int score;
+    public string couleurJouee;
 
     public Joueur(string nom, int score, string couleurJouee)
     {
