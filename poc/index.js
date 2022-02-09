@@ -24,7 +24,7 @@ wss.on('connection', (ws, req) => {
 
         ws.on('message', (data) => {
 
-            let resultat = IsJsonString(data);
+            let resultat = estJson(data);
 
             if(resultat == false){
 
@@ -60,7 +60,7 @@ wss.on('close', (ws) => {
 })
 
 //Regarde si une entrée est parsable ou non
-function IsJsonString(chaine) {
+function estJson(chaine) {
     try {
       var json = JSON.parse(chaine);
       return (typeof json === 'object');
