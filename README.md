@@ -16,5 +16,5 @@ Dans ce répertoire, vous trouverez tous les documents informatifs du projet :
 <li>[Ma recherche successive](https://docs.google.com/presentation/d/1H0UMDRzc97sCaY3vCeWYL5ryAMmdXwhrg5azQey8QRQ/edit?usp=sharing)</li>
 <li>[Ma grille de comparaison d'outil technologique](https://docs.google.com/presentation/d/1rgSN1m1GjaP8thHosTh3yx-8_plGKopJNxKL0g9a8qE/edit?usp=sharing)</li>
 <li>[Ma Poc et mes choix technologiques](https://docs.google.com/document/d/1jbdyEOYDHw7SzxwuGqe6Y55SLE6OTdfjWNHm0zaCVVE/edit?usp=sharing)</li>
-<li>[Mon analyse fonctionnelle pour mon MVP](https://docs.google.com/presentation/d/1SQVEf-ObRroUj1IibZHH5jIeBMKE-rfEa3CHmXetr5A/edit#slide=id.g115553b4828_0_167)</li>
+<li>[Mon analyse fonctionnelle pour mon MVP](https://docs.google.com/presentation/d/1SQVEf-ObRroUj1IibZHH5jIeBMKE-rfEa3CHmXetr5A/edit?usp=sharing)</li>
 </ol>
