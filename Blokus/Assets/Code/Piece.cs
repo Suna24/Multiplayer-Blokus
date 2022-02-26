@@ -4,6 +4,7 @@ public class Piece
 {
     public int[,] disposition { get; }
     public bool estPosee { get; set; }
+    public float positionX, positionY;
 
     public Piece(int[,] disposition)
     {
