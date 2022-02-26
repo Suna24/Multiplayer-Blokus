@@ -1,5 +1,6 @@
 using UnityEngine;
 using WebSocketSharp;
+using System.Collections.Generic;
 public class WS_Client : MonoBehaviour
 {
     WebSocket webSocket;
@@ -20,7 +21,7 @@ public class WS_Client : MonoBehaviour
         };
 
         //Gestion du joueur
-        joueur = new Joueur("Suna", 0, "rouge");
+        joueur = new Joueur("Suna", Couleur.ROUGE, new List<Piece>());
         joueurJson = JsonUtility.ToJson(joueur);
     }
 
