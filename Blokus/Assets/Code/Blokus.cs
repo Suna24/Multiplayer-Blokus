@@ -10,6 +10,7 @@ public class Blokus : MonoBehaviour
     public int[,] blokus = new int[20, 20];
     Piece piece;
     bool estEnMain = false;
+    Vector3Int coordinate;
 
     // Start is called before the first frame update
     void Start()
@@ -32,16 +33,24 @@ public class Blokus : MonoBehaviour
     {
         if (Input.GetMouseButtonDown(0))
         {
+            Vector2 pos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            coordinate = grid.WorldToCell(pos);
+
             if (estEnMain == true)
             {
-                estEnMain = false;
+                if (coordinate.x >= -10 && coordinate.x <= 10 && coordinate.y >= -12 && coordinate.y <= 8 && placementCorrect(piece, coordinate))
+                {
+                    estEnMain = false;
+                }
+                else
+                {
+                    Debug.Log("Ne peut pas être placée ici");
+                }
             }
             else
             {
-                Vector2 pos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+
                 RaycastHit2D hit = Physics2D.Raycast(pos, Vector2.zero);
-                Vector3Int coordinate = grid.WorldToCell(pos);
-                Debug.Log(coordinate.x + " " + coordinate.y);
 
                 if (hit.collider != null)
                 {
@@ -66,7 +75,37 @@ public class Blokus : MonoBehaviour
             if (Input.GetMouseButtonDown(1))
             {
                 piece.transform.Rotate(0, 0, 90);
+                piece.rotation();
             }
         }
+    }
+
+    public bool placementCorrect(Piece piece, Vector3Int coordonnes)
+    {
+
+        Debug.Log("Longueur 0 : " + piece.disposition.GetLength(0));
+        Debug.Log("Longueur 1 : " + piece.disposition.GetLength(1));
+
+        for (int x = 0; x < piece.disposition.GetLength(0); x++)
+        {
+            for (int y = 0; y < piece.disposition.GetLength(1); y++)
+            {
+
+                Debug.Log("Valeur piece[x,y]" + piece.disposition[x, y]);
+                if (piece.disposition[x, y] != 0)
+                {
+                    Vector2Int coord = new Vector2Int(coordonnes.x + y, coordonnes.y + x);
+
+                    Debug.Log("Coord" + coord.x + " " + coord.y);
+
+                    if (coord.x <= -10 || coord.x >= 10 || coord.y <= -12 || coord.y >= 8)
+                    {
+                        return false;
+                    }
+                }
+            }
+        }
+
+        return true;
     }
 }
