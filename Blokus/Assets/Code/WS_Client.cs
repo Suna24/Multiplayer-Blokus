@@ -21,7 +21,7 @@ public class WS_Client : MonoBehaviour
         };
 
         //Gestion du joueur
-        joueur = new Joueur("Suna", Couleur.ROUGE, new List<Piece>());
+        joueur = new Joueur("Suna", Couleur.ROUGE);
         joueurJson = JsonUtility.ToJson(joueur);
     }
 

@@ -11,6 +11,8 @@ public class Blokus : MonoBehaviour
     Piece piece;
     bool estEnMain = false;
     Vector3Int coordinate;
+    public Joueur joueur;
+    float positionInitialeX, positionInitialeY;
 
     // Start is called before the first frame update
     void Start()
@@ -26,6 +28,10 @@ public class Blokus : MonoBehaviour
                 blokus[x + 10, 20 - (y + 12)] = 0;
             }
         }
+
+        //Création d'un joueur
+        joueur = new Joueur("Joueur1", Couleur.ROUGE);
+
     }
 
     // Update is called once per frame
@@ -45,6 +51,8 @@ public class Blokus : MonoBehaviour
                 else
                 {
                     Debug.Log("Ne peut pas être placée ici");
+                    estEnMain = false;
+                    piece.transform.position = new Vector2(positionInitialeX, positionInitialeY);
                 }
             }
             else
@@ -55,8 +63,11 @@ public class Blokus : MonoBehaviour
                 if (hit.collider != null)
                 {
                     piece = hit.collider.gameObject.GetComponent<Piece>();
-                    Debug.Log(hit.collider.gameObject.name);
-                    Debug.Log(piece);
+
+                    positionInitialeX = piece.transform.position.x;
+                    positionInitialeY = piece.transform.position.y;
+
+                    Debug.Log(positionInitialeX + " " + positionInitialeY);
 
                     if (piece != null)
                     {
@@ -78,6 +89,7 @@ public class Blokus : MonoBehaviour
                 piece.tourner();
             }
         }
+
     }
 
     public bool placementCorrect(Piece piece, Vector3Int coordonnes)
@@ -92,6 +104,18 @@ public class Blokus : MonoBehaviour
             if (coord.x < -10 || coord.x >= 10 || coord.y <= -12 || coord.y > 8)
             {
                 return false;
+            }
+
+            if (joueur.aFaitSonPremierPlacement == false)
+            {
+                if ((coord.x == -10 && coord.y == 8))
+                {
+                    return true;
+                }
+                else
+                {
+
+                }
             }
         }
 
