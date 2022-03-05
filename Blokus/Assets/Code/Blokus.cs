@@ -47,6 +47,8 @@ public class Blokus : MonoBehaviour
                 if (coordinate.x >= -10 && coordinate.x <= 10 && coordinate.y >= -12 && coordinate.y <= 8 && placementCorrect(piece, coordinate))
                 {
                     estEnMain = false;
+                    piece.estPosee = true;
+                    joueur.aFaitSonPremierPlacement = true;
                 }
                 else
                 {
@@ -69,7 +71,7 @@ public class Blokus : MonoBehaviour
 
                     Debug.Log(positionInitialeX + " " + positionInitialeY);
 
-                    if (piece != null)
+                    if (piece != null && !piece.estPosee)
                     {
                         estEnMain = true;
                     }
@@ -86,7 +88,6 @@ public class Blokus : MonoBehaviour
             if (Input.GetMouseButtonDown(1))
             {
                 piece.transform.Rotate(0, 0, 90);
-                piece.tourner();
             }
         }
 
@@ -94,6 +95,8 @@ public class Blokus : MonoBehaviour
 
     public bool placementCorrect(Piece piece, Vector3Int coordonnes)
     {
+
+        bool correct = true;
 
         foreach (Transform enfant in piece.transform)
         {
@@ -108,15 +111,22 @@ public class Blokus : MonoBehaviour
 
             if (joueur.aFaitSonPremierPlacement == false)
             {
-                if ((coord.x == -10 && coord.y == 8))
+                if ((coord.x == -10 && coord.y == 8) || (coord.x == 9 && coord.y == 8)
+                || (coord.x == -10 && coord.y == -11) || (coord.x == 9 && coord.y == -11))
                 {
+                    correct = true;
                     return true;
                 }
                 else
                 {
-
+                    correct = false;
                 }
             }
+        }
+
+        if (correct == false)
+        {
+            return false;
         }
 
         return true;

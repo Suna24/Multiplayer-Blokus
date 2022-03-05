@@ -5,10 +5,10 @@ using System.Collections.Generic;
 public class Joueur
 {
     //Attributs
-    public string nom { get; }
+    public string nom { get; set; }
     public int score;
     public Couleur couleurJouee { get; }
-    public bool aFaitSonPremierPlacement { get; }
+    public bool aFaitSonPremierPlacement { get; set; }
 
     public Joueur(string nom, Couleur couleurJouee)
     {
