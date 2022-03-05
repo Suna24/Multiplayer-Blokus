@@ -75,7 +75,7 @@ public class Blokus : MonoBehaviour
             if (Input.GetMouseButtonDown(1))
             {
                 piece.transform.Rotate(0, 0, 90);
-                piece.rotation();
+                piece.tourner();
             }
         }
     }
@@ -83,26 +83,15 @@ public class Blokus : MonoBehaviour
     public bool placementCorrect(Piece piece, Vector3Int coordonnes)
     {
 
-        Debug.Log("Longueur 0 : " + piece.disposition.GetLength(0));
-        Debug.Log("Longueur 1 : " + piece.disposition.GetLength(1));
-
-        for (int x = 0; x < piece.disposition.GetLength(0); x++)
+        foreach (Transform enfant in piece.transform)
         {
-            for (int y = 0; y < piece.disposition.GetLength(1); y++)
+            Vector3Int coord = grid.WorldToCell(enfant.transform.position);
+
+            Debug.Log(" X : " + coord.x + ", Y = " + coord.y);
+
+            if (coord.x < -10 || coord.x >= 10 || coord.y <= -12 || coord.y > 8)
             {
-
-                Debug.Log("Valeur piece[x,y]" + piece.disposition[x, y]);
-                if (piece.disposition[x, y] != 0)
-                {
-                    Vector2Int coord = new Vector2Int(coordonnes.x + y, coordonnes.y + x);
-
-                    Debug.Log("Coord" + coord.x + " " + coord.y);
-
-                    if (coord.x < -10 || coord.x > 10 || coord.y < -12 || coord.y > 8)
-                    {
-                        return false;
-                    }
-                }
+                return false;
             }
         }
 
