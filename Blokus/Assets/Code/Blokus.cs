@@ -98,7 +98,7 @@ public class Blokus : MonoBehaviour
 
                     Debug.Log("Coord" + coord.x + " " + coord.y);
 
-                    if (coord.x <= -10 || coord.x >= 10 || coord.y <= -12 || coord.y >= 8)
+                    if (coord.x < -10 || coord.x > 10 || coord.y < -12 || coord.y > 8)
                     {
                         return false;
                     }
