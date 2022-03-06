@@ -3,7 +3,6 @@ using UnityEngine.Tilemaps;
 
 public class Blokus : MonoBehaviour
 {
-
     public Grid grid;
     public Tilemap map;
     public Tile sol;
@@ -69,8 +68,6 @@ public class Blokus : MonoBehaviour
                     positionInitialeX = piece.transform.position.x;
                     positionInitialeY = piece.transform.position.y;
 
-                    Debug.Log(positionInitialeX + " " + positionInitialeY);
-
                     if (piece != null && !piece.estPosee)
                     {
                         estEnMain = true;
@@ -96,39 +93,72 @@ public class Blokus : MonoBehaviour
     public bool placementCorrect(Piece piece, Vector3Int coordonnes)
     {
 
-        bool correct = true;
-
         foreach (Transform enfant in piece.transform)
         {
             Vector3Int coord = grid.WorldToCell(enfant.transform.position);
 
-            Debug.Log(" X : " + coord.x + ", Y = " + coord.y);
+            Debug.Log(coord.x + " " + coord.y);
 
             if (coord.x < -10 || coord.x >= 10 || coord.y <= -12 || coord.y > 8)
             {
                 return false;
             }
 
-            if (joueur.aFaitSonPremierPlacement == false)
+            //Vérifie si deux pièces se chevauchent
+            if (blokus[coord.x + 10, 20 - (coord.y + 12)] != 0)
             {
-                if ((coord.x == -10 && coord.y == 8) || (coord.x == 9 && coord.y == 8)
-                || (coord.x == -10 && coord.y == -11) || (coord.x == 9 && coord.y == -11))
-                {
-                    correct = true;
-                    return true;
-                }
-                else
-                {
-                    correct = false;
-                }
+                Debug.Log("Deux pièces se chevauchent");
+                return false;
             }
+
+            //Vérifie s'il y a une pièce de la même couleur directement à côté
+            if (verificationPlacementPiece(coord.x + 10 + 1, 20 - (coord.y + 12), 19) == false ||
+                verificationPlacementPiece(coord.x + 10 - 1, 20 - (coord.y + 12), 0) == false ||
+                verificationPlacementPiece(coord.x + 10, 20 - (coord.y + 12) + 1, 19) == false ||
+                verificationPlacementPiece(coord.x + 10, 20 - (coord.y + 12) - 1, 0) == false)
+            {
+                Debug.Log("Une pièce de la même couleur est directement à côté");
+                return false;
+            }
+
         }
 
-        if (correct == false)
+        //TODO refaire le premier placement
+
+        foreach (Transform enfant in piece.transform)
         {
-            return false;
+            Vector3Int coord = grid.WorldToCell(enfant.transform.position);
+
+            blokus[coord.x + 10, 20 - (coord.y + 12)] = ((int)joueur.couleurJouee);
+            Debug.Log(blokus[coord.x + 10, 20 - (coord.y + 12)]);
         }
 
         return true;
+    }
+
+    private bool verificationPlacementPiece(int x, int y, int index)
+    {
+        if (index == 0)
+        {
+            if (x >= index && y >= index)
+            {
+                return !(blokus[x, y] == ((int)joueur.couleurJouee));
+            }
+            else
+            {
+                return true;
+            }
+        }
+        else
+        {
+            if (x <= index && y <= index)
+            {
+                return !(blokus[x, y] == ((int)joueur.couleurJouee));
+            }
+            else
+            {
+                return true;
+            }
+        }
     }
 }
