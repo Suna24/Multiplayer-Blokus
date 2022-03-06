@@ -3,7 +3,6 @@ const WebSocket = require('ws');
 var nombreDeJoueurs = 0;
 var tableauDeCouleurs = [1, 2, 3, 4];
 var couleurDisponibles = [true, true, true, true];
-var couleurJouee;
 
 //Création du serveur
 const wss = new WebSocket.Server({port:3000}, () =>{
@@ -23,6 +22,7 @@ wss.on('connection', (ws, req) => {
         var id = req.headers['sec-websocket-key'];
         console.log("Connection effectuée par " + id);
 
+        var couleurJouee;
         nombreDeJoueurs = nombreDeJoueurs + 1;
 
         //On assigne une couleur disponible
