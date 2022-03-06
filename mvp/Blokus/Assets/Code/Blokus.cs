@@ -1,5 +1,7 @@
 using UnityEngine;
 using UnityEngine.Tilemaps;
+using WebSocketSharp;
+using System;
 
 public class Blokus : MonoBehaviour
 {
@@ -14,10 +16,23 @@ public class Blokus : MonoBehaviour
     public Joueur joueur;
     float positionInitialeX, positionInitialeY;
     Quaternion rotationInitiale;
+    WebSocket webSocket;
 
     // Start is called before the first frame update
     void Start()
     {
+        //Gestion de la connection
+        webSocket = new WebSocket("ws://localhost:3000");
+        webSocket.Connect();
+
+        webSocket.OnMessage += (sender, e) =>
+        {
+            Debug.Log("Message du serveur : " + e.Data);
+
+            //Création du joueur
+            Couleur couleur = (Couleur)Enum.Parse(typeof(Couleur), e.Data);
+            joueur = new Joueur("Joueur " + e.Data, couleur);
+        };
 
         //Création de la map
         for (int x = -11; x < 11; x++)
@@ -38,9 +53,6 @@ public class Blokus : MonoBehaviour
                 }
             }
         }
-
-        //Création d'un joueur
-        joueur = new Joueur("Joueur1", Couleur.ROUGE);
 
     }
 
@@ -81,7 +93,9 @@ public class Blokus : MonoBehaviour
                     positionInitialeY = piece.transform.position.y;
                     rotationInitiale = piece.transform.rotation;
 
-                    if (piece != null && !piece.estPosee)
+                    //On vérifie que la piece existe, qu'elle n'est pas posée définitivement sur le plateau et qu'elle fait partie
+                    //du set de pieces du joueur (autrement dit sa couleur)
+                    if (piece != null && !piece.estPosee && piece.transform.tag.CompareTo(joueur.couleurJouee.ToString()) == 0)
                     {
                         estEnMain = true;
                     }
@@ -181,5 +195,10 @@ public class Blokus : MonoBehaviour
         }
 
         return true;
+    }
+
+    private void OnApplicationQuit()
+    {
+        webSocket.Close();
     }
 }

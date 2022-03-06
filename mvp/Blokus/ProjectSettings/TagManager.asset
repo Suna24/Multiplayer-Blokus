@@ -5,6 +5,10 @@ TagManager:
   serializedVersion: 2
   tags:
   - Plateau
+  - ROUGE
+  - JAUNE
+  - BLEU
+  - VERT
   layers:
   - Default
   - TransparentFX

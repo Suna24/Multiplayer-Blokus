@@ -1,0 +1,21 @@
+{
+  "name": "poc",
+  "version": "1.0.0",
+  "description": "Proof of Concept du projet Blokus",
+  "main": "index.js",
+  "scripts": {
+    "start": "node .",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Suna",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.17.2",
+    "socket.io": "^4.4.1",
+    "socket.io-client": "^4.4.1",
+    "ws": "^8.4.2"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.15"
+  }
+}
