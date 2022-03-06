@@ -93,6 +93,8 @@ public class Blokus : MonoBehaviour
     public bool placementCorrect(Piece piece, Vector3Int coordonnes)
     {
 
+        bool aUneDiagonale = false;
+
         foreach (Transform enfant in piece.transform)
         {
             Vector3Int coord = grid.WorldToCell(enfant.transform.position);
@@ -112,18 +114,37 @@ public class Blokus : MonoBehaviour
             }
 
             //Vérifie s'il y a une pièce de la même couleur directement à côté
-            if (verificationPlacementPiece(coord.x + 10 + 1, 20 - (coord.y + 12), 19) == false ||
-                verificationPlacementPiece(coord.x + 10 - 1, 20 - (coord.y + 12), 0) == false ||
-                verificationPlacementPiece(coord.x + 10, 20 - (coord.y + 12) + 1, 19) == false ||
-                verificationPlacementPiece(coord.x + 10, 20 - (coord.y + 12) - 1, 0) == false)
+            if (verificationPlacementPiece(coord.x + 10 + 1, 20 - (coord.y + 12), false) == true ||
+                verificationPlacementPiece(coord.x + 10 - 1, 20 - (coord.y + 12), false) == true ||
+                verificationPlacementPiece(coord.x + 10, 20 - (coord.y + 12) + 1, false) == true ||
+                verificationPlacementPiece(coord.x + 10, 20 - (coord.y + 12) - 1, false) == true)
             {
                 Debug.Log("Une pièce de la même couleur est directement à côté");
                 return false;
             }
 
+            //Vérifie s'il y a une piece de la même couleur en diagonale
+            if (verificationPlacementPiece(coord.x + 10 + 1, 20 - (coord.y + 12) + 1, true) == true ||
+                verificationPlacementPiece(coord.x + 10 - 1, 20 - (coord.y + 12) - 1, true) == true ||
+                verificationPlacementPiece(coord.x + 10 + 1, 20 - (coord.y + 12) - 1, true) == true ||
+                verificationPlacementPiece(coord.x + 10 - 1, 20 - (coord.y + 12) + 1, true) == true)
+            {
+                aUneDiagonale = true;
+            }
+
         }
 
         //TODO refaire le premier placement
+        if (joueur.aFaitSonPremierPlacement == false)
+        {
+            aUneDiagonale = true;
+        }
+
+        if (aUneDiagonale == false)
+        {
+            Debug.Log("N'est pas connecté en diagonale avec une pièce de votre couleur");
+            return false;
+        }
 
         foreach (Transform enfant in piece.transform)
         {
@@ -136,28 +157,21 @@ public class Blokus : MonoBehaviour
         return true;
     }
 
-    private bool verificationPlacementPiece(int x, int y, int index)
+    private bool verificationPlacementPiece(int x, int y, bool diago)
     {
-        if (index == 0)
+        if (x >= 0 && y >= 0 && x <= 19 && y <= 19)
         {
-            if (x >= index && y >= index)
-            {
-                return !(blokus[x, y] == ((int)joueur.couleurJouee));
-            }
-            else
-            {
-                return true;
-            }
+            return blokus[x, y] == ((int)joueur.couleurJouee);
         }
         else
         {
-            if (x <= index && y <= index)
+            if (diago)
             {
-                return !(blokus[x, y] == ((int)joueur.couleurJouee));
+                return true;
             }
             else
             {
-                return true;
+                return false;
             }
         }
     }
