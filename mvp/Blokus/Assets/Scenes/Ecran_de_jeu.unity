@@ -9733,6 +9733,10 @@ MonoBehaviour:
   map: {fileID: 1133019225}
   bordure: {fileID: 11400000, guid: 94b649b69f34694478991cc8be2e278c, type: 2}
   sol: {fileID: 11400000, guid: e8dbde489b398714f845056eb5c535e2, type: 2}
+  rouge: {fileID: 11400000, guid: 225f97debcf08de44954f929e9e83ead, type: 2}
+  bleu: {fileID: 11400000, guid: 375baa7b86308c24fb815232a1302097, type: 2}
+  jaune: {fileID: 11400000, guid: 94c8176847dd4044ebac484a51aa6b60, type: 2}
+  vert: {fileID: 11400000, guid: 584a06a7119ecc74a8e0e06b24b05371, type: 2}
   joueur:
     score: 0
 --- !u!1001 &1543372293

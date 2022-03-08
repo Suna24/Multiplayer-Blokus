@@ -48,6 +48,7 @@ wss.on('connection', (ws, req) => {
         ws.on('message', (data) => {
 
             let resultat = estJson(data);
+            let requeteMiseAJourPlateau;
 
             if(resultat == false){
 
@@ -55,12 +56,18 @@ wss.on('connection', (ws, req) => {
 
             } else {
                 console.log(JSON.parse(data));
+                console.log(data);
+
+                requeteMiseAJourPlateau = {
+                    id : "plateau",
+                    plateau : JSON.parse(data)
+                }
             }
 
             //Envoi du message en broadcast
             wss.clients.forEach(function each(client) {
                 if (client.readyState === WebSocket.OPEN) {
-                  client.send(data.toString());
+                  client.send(JSON.stringify(requeteMiseAJourPlateau));
                 }
             });
         })

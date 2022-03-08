@@ -2,13 +2,13 @@ using UnityEngine;
 using UnityEngine.Tilemaps;
 using WebSocketSharp;
 using System;
+using Newtonsoft.Json;
 
 public class Blokus : MonoBehaviour
 {
     public Grid grid;
     public Tilemap map;
-    public Tile bordure;
-    public Tile sol;
+    public Tile bordure, sol, rouge, bleu, jaune, vert;
     public int[,] blokus = new int[22, 22];
     Piece piece;
     bool estEnMain = false;
@@ -29,9 +29,38 @@ public class Blokus : MonoBehaviour
         {
             Debug.Log("Message du serveur : " + e.Data);
 
-            //Création du joueur
-            Couleur couleur = (Couleur)Enum.Parse(typeof(Couleur), e.Data);
-            joueur = new Joueur("Joueur " + e.Data, couleur);
+            Message message = JsonUtility.FromJson<Message>(e.Data);
+
+            switch (message.id)
+            {
+                case "joueur":
+
+                    Message.MessageCreationJoueur messageCreationJoueur = JsonUtility.FromJson<Message.MessageCreationJoueur>(e.Data);
+
+                    //Création du joueur
+                    Couleur couleur = (Couleur)Enum.Parse(typeof(Couleur), messageCreationJoueur.couleurJouee.ToString());
+                    joueur = new Joueur("Joueur " + e.Data, couleur);
+                    break;
+
+                case "plateau":
+
+                    Debug.Log("identification plateau");
+
+                    Message.MessageMiseAJourPlateau messageMiseAJourPlateau = JsonConvert.DeserializeObject<Message.MessageMiseAJourPlateau>(e.Data);
+
+                    Debug.Log("Deserialization réussie");
+
+                    for (int x = 0; x < 22; x++)
+                    {
+                        for (int y = 0; y < 22; y++)
+                        {
+                            Debug.Log(messageMiseAJourPlateau.plateau[x, y]);
+                            blokus[x, y] = messageMiseAJourPlateau.plateau[x, y];
+                        }
+                    }
+                    miseAJourDuPlateau();
+                    break;
+            }
         };
 
         //Création de la map
@@ -71,6 +100,9 @@ public class Blokus : MonoBehaviour
                     estEnMain = false;
                     piece.estPosee = true;
                     joueur.aFaitSonPremierPlacement = true;
+                    string json = JsonConvert.SerializeObject(blokus, Formatting.Indented);
+                    Debug.Log(json);
+                    webSocket.Send(json);
                 }
                 else
                 {
@@ -232,6 +264,53 @@ public class Blokus : MonoBehaviour
         }
 
         return true;
+    }
+
+    public void miseAJourDuPlateau()
+    {
+        //On parcourt tout le tableau tout en enlevant au fur et à mesure l'ancien
+        for (int x = -11; x < 11; x++)
+        {
+            for (int y = -12; y < 10; y++)
+            {
+                Vector3Int p = new Vector3Int(x, y, 0);
+                map.RefreshTile(p);
+
+                //On regarde quel nombre est stocké dans le tableau
+                switch (blokus[x + 11, y + 12])
+                {
+                    //Dans le cas où il s'agit d'une bordure
+                    case 10:
+                        map.SetTile(p, bordure);
+                        break;
+
+                    //Dans le cas où il s'agit du sol
+                    case 0:
+                        map.SetTile(p, sol);
+                        break;
+
+                    //Dans le cas où il s'agit d'une pièce rouge
+                    case 1:
+                        map.SetTile(p, rouge);
+                        break;
+
+                    //Dans le cas où il s'agit d'une pièce bleu
+                    case 2:
+                        map.SetTile(p, bleu);
+                        break;
+
+                    //Dans le cas où il s'agit d'une pièce jaune
+                    case 3:
+                        map.SetTile(p, jaune);
+                        break;
+
+                    //Dans le cas où il s'agit d'une pièce vert
+                    case 4:
+                        map.SetTile(p, vert);
+                        break;
+                }
+            }
+        }
     }
 
     private void OnApplicationQuit()
