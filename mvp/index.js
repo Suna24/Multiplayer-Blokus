@@ -33,7 +33,13 @@ wss.on('connection', (ws, req) => {
             if(couleurDisponibles[i] == true){
                 couleurDisponibles[i] = false;
                 couleurJouee = tableauDeCouleurs[i];
-                ws.send(couleurJouee);
+
+                let requete = {
+                    id : "joueur",
+                    couleurJouee : couleurJouee
+                }
+
+                ws.send(JSON.stringify(requete));
                 break;
             }
         }
@@ -48,7 +54,6 @@ wss.on('connection', (ws, req) => {
                 console.log(id + " a envoyé un message : " + data);
 
             } else {
-                
                 console.log(JSON.parse(data));
             }
 
