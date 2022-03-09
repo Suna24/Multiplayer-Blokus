@@ -69,10 +69,6 @@ wss.on('connection', (ws, req) => {
                     plateau : JSON.parse(data)
                 }
 
-                requeteTour = {
-                    id: "tour"
-                }
-
                 //C'est le tour du joueur suivant
                 if(indexDeParcoursDesJoueurs == (joueurs.length - 1)){
                     indexDeParcoursDesJoueurs = 0;
@@ -80,9 +76,27 @@ wss.on('connection', (ws, req) => {
                     indexDeParcoursDesJoueurs++;
                 }
 
+                requeteUpdate = {
+                    id: "tour",
+                    tourCourant: false,
+                    couleurTour: tableauDeCouleurs[indexDeParcoursDesJoueurs]
+                }
+
+                console.log(requeteUpdate);
+
                 wss.clients.forEach(function each(client) {
                     if (client.readyState === WebSocket.OPEN && client === joueurs[indexDeParcoursDesJoueurs]) {
-                      client.send(JSON.stringify(requeteTour));
+
+                    requeteTour = {
+                        id: "tour",
+                        tourCourant: true,
+                        couleurTour: tableauDeCouleurs[indexDeParcoursDesJoueurs]
+                    }
+
+                    client.send(JSON.stringify(requeteTour));
+
+                    } else {
+                        client.send(JSON.stringify(requeteUpdate));
                     }
                 });
 
@@ -100,6 +114,8 @@ wss.on('connection', (ws, req) => {
         ws.on('close', () => {
             console.log("Déconnection effectuée par " + id);
             nombreDeJoueurs = nombreDeJoueurs - 1;
+
+            joueurs.splice(joueurs.indexOf(ws), 1);
         })
 
     } else {

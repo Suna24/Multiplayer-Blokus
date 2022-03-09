@@ -31,4 +31,16 @@ public class Message
 
         }
     }
+
+    public class MessageMiseAJourInterface
+    {
+        public string id;
+        public bool tourCourant;
+        public int couleurTour;
+
+        public MessageMiseAJourInterface()
+        {
+
+        }
+    }
 }

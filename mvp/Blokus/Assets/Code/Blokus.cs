@@ -18,6 +18,7 @@ public class Blokus : MonoBehaviour
     float positionInitialeX, positionInitialeY;
     Quaternion rotationInitiale;
     WebSocket webSocket;
+    public Text tourCourant;
 
     // Start is called before the first frame update
     void Start()
@@ -66,7 +67,14 @@ public class Blokus : MonoBehaviour
                     break;
 
                 case "tour":
-                    joueur.tour = true;
+
+                    Message.MessageMiseAJourInterface majInterface = JsonUtility.FromJson<Message.MessageMiseAJourInterface>(e.Data);
+
+                    if (majInterface.tourCourant == true)
+                    {
+                        joueur.tour = true;
+                    }
+                    tourCourant.text = "Tour de " + (Couleur)Enum.Parse(typeof(Couleur), majInterface.couleurTour.ToString());
                     break;
 
                 default:
