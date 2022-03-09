@@ -1,3 +1,4 @@
+using UnityEngine.UI;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 using WebSocketSharp;
@@ -40,15 +41,18 @@ public class Blokus : MonoBehaviour
                     //Création du joueur
                     Couleur couleur = (Couleur)Enum.Parse(typeof(Couleur), messageCreationJoueur.couleurJouee.ToString());
                     joueur = new Joueur("Joueur " + e.Data, couleur);
+
+                    //Si c'est le premier joueur, alors c'est son tour
+                    if (couleur.Equals(Couleur.ROUGE))
+                    {
+                        joueur.tour = true;
+                    }
+
                     break;
 
                 case "plateau":
 
-                    Debug.Log("identification plateau");
-
                     Message.MessageMiseAJourPlateau messageMiseAJourPlateau = JsonConvert.DeserializeObject<Message.MessageMiseAJourPlateau>(e.Data);
-
-                    Debug.Log("Deserialization réussie");
 
                     for (int x = 0; x < 22; x++)
                     {
@@ -60,35 +64,26 @@ public class Blokus : MonoBehaviour
                     }
                     miseAJourDuPlateau();
                     break;
+
+                case "tour":
+                    joueur.tour = true;
+                    break;
+
+                default:
+                    Debug.Log("Message inconnu");
+                    break;
             }
         };
 
         //Création de la map
-        for (int x = -11; x < 11; x++)
-        {
-            for (int y = -12; y < 10; y++)
-            {
-                Vector3Int p = new Vector3Int(x, y, 0);
-
-                if (x == -11 || x == 10 || y == 9 || y == -12)
-                {
-                    map.SetTile(p, bordure);
-                    blokus[x + 11, y + 12] = 10;
-                }
-                else
-                {
-                    map.SetTile(p, sol);
-                    blokus[x + 11, y + 12] = 0;
-                }
-            }
-        }
+        creationDuPlateau();
 
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetMouseButtonDown(0))
+        if (Input.GetMouseButtonDown(0) && joueur.tour == true)
         {
             Vector2 pos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
             coordinate = grid.WorldToCell(pos);
@@ -100,6 +95,7 @@ public class Blokus : MonoBehaviour
                     estEnMain = false;
                     piece.estPosee = true;
                     joueur.aFaitSonPremierPlacement = true;
+                    joueur.tour = false;
                     string json = JsonConvert.SerializeObject(blokus, Formatting.Indented);
                     Debug.Log(json);
                     webSocket.Send(json);
@@ -136,6 +132,11 @@ public class Blokus : MonoBehaviour
             }
         }
 
+        if (Input.GetMouseButtonDown(0) && joueur.tour == false)
+        {
+            Debug.Log("Ce n'est pas votre tour");
+        }
+
         if (estEnMain == true)
         {
             Vector2 cursorPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
@@ -147,6 +148,28 @@ public class Blokus : MonoBehaviour
             }
         }
 
+    }
+
+    public void creationDuPlateau()
+    {
+        for (int x = -11; x < 11; x++)
+        {
+            for (int y = -12; y < 10; y++)
+            {
+                Vector3Int p = new Vector3Int(x, y, 0);
+
+                if (x == -11 || x == 10 || y == 9 || y == -12)
+                {
+                    map.SetTile(p, bordure);
+                    blokus[x + 11, y + 12] = 10;
+                }
+                else
+                {
+                    map.SetTile(p, sol);
+                    blokus[x + 11, y + 12] = 0;
+                }
+            }
+        }
     }
 
     public bool placementCorrect(Piece piece, Vector3Int coordonnes)
@@ -315,6 +338,9 @@ public class Blokus : MonoBehaviour
 
     private void OnApplicationQuit()
     {
-        webSocket.Close();
+        if (webSocket != null)
+        {
+            webSocket.Close();
+        }
     }
 }

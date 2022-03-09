@@ -1,8 +1,11 @@
 //Importations utiles
+const { Socket } = require('socket.io-client');
 const WebSocket = require('ws');
 var nombreDeJoueurs = 0;
 var tableauDeCouleurs = [1, 2, 3, 4];
 var couleurDisponibles = [true, true, true, true];
+var joueurs = [];
+var indexDeParcoursDesJoueurs = 0;
 
 //Création du serveur
 const wss = new WebSocket.Server({port:3000}, () =>{
@@ -21,6 +24,9 @@ wss.on('connection', (ws, req) => {
 
         var id = req.headers['sec-websocket-key'];
         console.log("Connection effectuée par " + id);
+
+        //On ajoute le joueur dans la liste des joueurs connectés
+        joueurs.push(ws);
 
         var couleurJouee;
         nombreDeJoueurs = nombreDeJoueurs + 1;
@@ -44,7 +50,7 @@ wss.on('connection', (ws, req) => {
             }
         }
 
-        //Lors de la récpetion d'un message venant de l'un des clients
+        //Lors de la réception d'un message venant de l'un des clients
         ws.on('message', (data) => {
 
             let resultat = estJson(data);
@@ -62,6 +68,24 @@ wss.on('connection', (ws, req) => {
                     id : "plateau",
                     plateau : JSON.parse(data)
                 }
+
+                requeteTour = {
+                    id: "tour"
+                }
+
+                //C'est le tour du joueur suivant
+                if(indexDeParcoursDesJoueurs == (joueurs.length - 1)){
+                    indexDeParcoursDesJoueurs = 0;
+                } else {
+                    indexDeParcoursDesJoueurs++;
+                }
+
+                wss.clients.forEach(function each(client) {
+                    if (client.readyState === WebSocket.OPEN && client === joueurs[indexDeParcoursDesJoueurs]) {
+                      client.send(JSON.stringify(requeteTour));
+                    }
+                });
+
             }
 
             //Envoi du message en broadcast
@@ -76,9 +100,6 @@ wss.on('connection', (ws, req) => {
         ws.on('close', () => {
             console.log("Déconnection effectuée par " + id);
             nombreDeJoueurs = nombreDeJoueurs - 1;
-
-            //On remet la couleur qu'il avait disponible pour d'éventuelles d'autres connections
-            couleurDisponibles[couleurJouee - 1] = true;
         })
 
     } else {
