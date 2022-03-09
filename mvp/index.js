@@ -1,5 +1,4 @@
 //Importations utiles
-const { Socket } = require('socket.io-client');
 const WebSocket = require('ws');
 var nombreDeJoueurs = 0;
 var tableauDeCouleurs = [1, 2, 3, 4];
@@ -115,6 +114,7 @@ wss.on('connection', (ws, req) => {
             console.log("Déconnection effectuée par " + id);
             nombreDeJoueurs = nombreDeJoueurs - 1;
 
+            //On enlève le socket associé
             joueurs.splice(joueurs.indexOf(ws), 1);
         })
 

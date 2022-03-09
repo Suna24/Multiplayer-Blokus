@@ -59,7 +59,6 @@ public class Blokus : MonoBehaviour
                     {
                         for (int y = 0; y < 22; y++)
                         {
-                            Debug.Log(messageMiseAJourPlateau.plateau[x, y]);
                             blokus[x, y] = messageMiseAJourPlateau.plateau[x, y];
                         }
                     }
@@ -73,8 +72,12 @@ public class Blokus : MonoBehaviour
                     if (majInterface.tourCourant == true)
                     {
                         joueur.tour = true;
+                        tourCourant.text = "C'est mon tour";
                     }
-                    tourCourant.text = "Tour de " + (Couleur)Enum.Parse(typeof(Couleur), majInterface.couleurTour.ToString());
+                    else
+                    {
+                        tourCourant.text = "Tour de " + (Couleur)Enum.Parse(typeof(Couleur), majInterface.couleurTour.ToString());
+                    }
                     break;
 
                 default:
@@ -98,6 +101,7 @@ public class Blokus : MonoBehaviour
 
             if (estEnMain == true)
             {
+
                 if (coordinate.x >= -10 && coordinate.x <= 9 && coordinate.y >= -11 && coordinate.y <= 8 && placementCorrect(piece, coordinate))
                 {
                     estEnMain = false;
@@ -169,6 +173,7 @@ public class Blokus : MonoBehaviour
                 if (x == -11 || x == 10 || y == 9 || y == -12)
                 {
                     map.SetTile(p, bordure);
+                    choixQuartierDeCouleur(x, y, p);
                     blokus[x + 11, y + 12] = 10;
                 }
                 else
@@ -177,6 +182,26 @@ public class Blokus : MonoBehaviour
                     blokus[x + 11, y + 12] = 0;
                 }
             }
+        }
+    }
+
+    public void choixQuartierDeCouleur(int x, int y, Vector3Int p)
+    {
+        if (x == -11 && y == 9)
+        {
+            map.SetTile(p, rouge);
+        }
+        else if (x == 10 && y == 9)
+        {
+            map.SetTile(p, bleu);
+        }
+        else if (x == -11 && y == -12)
+        {
+            map.SetTile(p, jaune);
+        }
+        else if (x == 10 && y == -12)
+        {
+            map.SetTile(p, vert);
         }
     }
 
@@ -191,36 +216,15 @@ public class Blokus : MonoBehaviour
 
             Debug.Log(coord.x + " " + coord.y);
 
-            if (coord.x < -10 || coord.x >= 10 || coord.y <= -12 || coord.y > 8)
-            {
-                return false;
-            }
+            if (verificationPlacementHorsPlateau(coord) == true) return false;
 
-            //Vérifie si deux pièces se chevauchent
-            if (blokus[coord.x + 11, coord.y + 12] != 0)
-            {
-                Debug.Log("Deux pièces se chevauchent");
-                return false;
-            }
+            if (verificationChevauchementPiece(coord) == true) return false;
 
-            //Vérifie s'il y a une pièce de la même couleur directement à côté
-            if (blokus[coord.x + 11 + 1, coord.y + 12] == ((int)joueur.couleurJouee) ||
-                blokus[coord.x + 11 - 1, coord.y + 12] == ((int)joueur.couleurJouee) ||
-                blokus[coord.x + 11, (coord.y + 12) + 1] == ((int)joueur.couleurJouee) ||
-                blokus[coord.x + 11, (coord.y + 12) - 1] == ((int)joueur.couleurJouee))
-            {
-                Debug.Log("Une pièce de la même couleur est directement à côté");
-                return false;
-            }
+            if (verificationMemeCouleurACote(coord) == true) return false;
 
-            //Vérifie s'il y a une piece de la même couleur en diagonale
-            if (blokus[coord.x + 11 + 1, coord.y + 12 + 1] == ((int)joueur.couleurJouee) ||
-                blokus[coord.x + 11 - 1, coord.y + 12 - 1] == ((int)joueur.couleurJouee) ||
-                blokus[coord.x + 11 + 1, coord.y + 12 - 1] == ((int)joueur.couleurJouee) ||
-                blokus[coord.x + 11 - 1, coord.y + 12 + 1] == ((int)joueur.couleurJouee))
+            if (verificationDiagonale(coord) == true)
             {
                 aUneDiagonale = true;
-                Debug.Log("Diagonale trouvée");
             }
 
             ///Premier placement
@@ -229,55 +233,34 @@ public class Blokus : MonoBehaviour
                 switch (joueur.couleurJouee)
                 {
                     case Couleur.ROUGE:
-                        if (coord.x == -10 && coord.y == 8)
+                        if (verificationPremierPlacement(coord, -10, 8) == true)
                         {
                             aUneDiagonale = true;
-                            joueur.aFaitSonPremierPlacement = true;
-                        }
-                        else
-                        {
-                            Debug.Log("Le premier placement n'est pas bon");
                         }
                         break;
 
                     case Couleur.BLEU:
-                        if (coord.x == 9 && coord.y == 8)
+                        if (verificationPremierPlacement(coord, 9, 8) == true)
                         {
                             aUneDiagonale = true;
-                            joueur.aFaitSonPremierPlacement = true;
-                        }
-                        else
-                        {
-                            Debug.Log("Le premier placement n'est pas bon");
                         }
                         break;
 
                     case Couleur.JAUNE:
-                        if (coord.x == -10 && coord.y == -11)
+                        if (verificationPremierPlacement(coord, -10, -11) == true)
                         {
                             aUneDiagonale = true;
-                            joueur.aFaitSonPremierPlacement = true;
-                        }
-                        else
-                        {
-                            Debug.Log("Le premier placement n'est pas bon");
                         }
                         break;
 
                     case Couleur.VERT:
-                        if (coord.x == 9 && coord.y == -11)
+                        if (verificationPremierPlacement(coord, 9, -11) == true)
                         {
                             aUneDiagonale = true;
-                            joueur.aFaitSonPremierPlacement = true;
-                        }
-                        else
-                        {
-                            Debug.Log("Le premier placement n'est pas bon");
                         }
                         break;
                 }
             }
-
         }
 
         if (aUneDiagonale == false)
@@ -289,12 +272,82 @@ public class Blokus : MonoBehaviour
         foreach (Transform enfant in piece.transform)
         {
             Vector3Int coord = grid.WorldToCell(enfant.transform.position);
-
             blokus[coord.x + 11, coord.y + 12] = ((int)joueur.couleurJouee);
-            Debug.Log(blokus[coord.x + 11, coord.y + 12]);
         }
 
         return true;
+    }
+
+    public bool verificationPlacementHorsPlateau(Vector3Int coordonnees)
+    {
+        if (coordonnees.x < -10 || coordonnees.x >= 10 || coordonnees.y <= -12 || coordonnees.y > 8)
+        {
+            Debug.Log("Votre pièce est en dehors du plateau");
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+
+    public bool verificationChevauchementPiece(Vector3Int coordonnees)
+    {
+        if (blokus[coordonnees.x + 11, coordonnees.y + 12] != 0)
+        {
+            Debug.Log("Deux pièces se chevauchent");
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+
+    public bool verificationMemeCouleurACote(Vector3Int coordonnees)
+    {
+        if (blokus[coordonnees.x + 11 + 1, coordonnees.y + 12] == ((int)joueur.couleurJouee) ||
+                blokus[coordonnees.x + 11 - 1, coordonnees.y + 12] == ((int)joueur.couleurJouee) ||
+                blokus[coordonnees.x + 11, (coordonnees.y + 12) + 1] == ((int)joueur.couleurJouee) ||
+                blokus[coordonnees.x + 11, (coordonnees.y + 12) - 1] == ((int)joueur.couleurJouee))
+        {
+            Debug.Log("Une pièce de la même couleur est directement à côté");
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+
+    public bool verificationDiagonale(Vector3Int coordonnees)
+    {
+        if (blokus[coordonnees.x + 11 + 1, coordonnees.y + 12 + 1] == ((int)joueur.couleurJouee) ||
+                blokus[coordonnees.x + 11 - 1, coordonnees.y + 12 - 1] == ((int)joueur.couleurJouee) ||
+                blokus[coordonnees.x + 11 + 1, coordonnees.y + 12 - 1] == ((int)joueur.couleurJouee) ||
+                blokus[coordonnees.x + 11 - 1, coordonnees.y + 12 + 1] == ((int)joueur.couleurJouee))
+        {
+            Debug.Log("Diagonale trouvée");
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+
+    public bool verificationPremierPlacement(Vector3Int coordonnees, int x, int y)
+    {
+        if (coordonnees.x == x && coordonnees.y == y)
+        {
+            joueur.aFaitSonPremierPlacement = true;
+            return true;
+        }
+        else
+        {
+            Debug.Log("Le premier placement n'est pas bon");
+            return false;
+        }
     }
 
     public void miseAJourDuPlateau()
@@ -305,6 +358,8 @@ public class Blokus : MonoBehaviour
             for (int y = -12; y < 10; y++)
             {
                 Vector3Int p = new Vector3Int(x, y, 0);
+
+                //On refresh toutes les tles du plateau
                 map.RefreshTile(p);
 
                 //On regarde quel nombre est stocké dans le tableau
