@@ -17,7 +17,7 @@ TagManager:
   - Water
   - UI
   - Piece
-  - 
+  - Tab
   - 
   - 
   - 
@@ -45,4 +45,7 @@ TagManager:
   m_SortingLayers:
   - name: Default
     uniqueID: 0
+    locked: 0
+  - name: Tab
+    uniqueID: 1847564579
     locked: 0
