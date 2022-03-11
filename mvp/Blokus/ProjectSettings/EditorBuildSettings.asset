@@ -17,4 +17,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Ecran_de_regles.unity
     guid: 986769b7cbb92e5488baab32223879c5
+  - enabled: 1
+    path: Assets/Scenes/Ecran_rejoindre_partie.unity
+    guid: 8c2d75cf90a2b0449b74cc390ba1b7b7
   m_configObjects: {}

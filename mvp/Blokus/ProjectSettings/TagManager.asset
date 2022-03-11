@@ -9,6 +9,7 @@ TagManager:
   - JAUNE
   - BLEU
   - VERT
+  - Partie
   layers:
   - Default
   - TransparentFX
