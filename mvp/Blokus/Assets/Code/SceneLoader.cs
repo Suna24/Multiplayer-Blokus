@@ -9,15 +9,7 @@ public class SceneLoader : MonoBehaviour
 
     public void quitter()
     {
-        if (UnityEditor.EditorApplication.isPlaying)
-        {
-            UnityEditor.EditorApplication.isPlaying = false;
-        }
-        else
-        {
-            Application.Quit();
-        }
-
+        Application.Quit();
     }
 
     public void commentJouer()
@@ -27,7 +19,7 @@ public class SceneLoader : MonoBehaviour
 
     public void rejoindreUnePartie()
     {
-        Debug.Log("Pas implémenté pour le moment");
+        SceneManager.LoadScene("Ecran_rejoindre_partie");
     }
 
     public void retourAccueil()

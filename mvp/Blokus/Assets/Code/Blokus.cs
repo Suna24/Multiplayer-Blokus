@@ -43,6 +43,17 @@ public class Blokus : MonoBehaviour
                     Couleur couleur = (Couleur)Enum.Parse(typeof(Couleur), messageCreationJoueur.couleurJouee.ToString());
                     joueur = new Joueur("Joueur " + e.Data, couleur);
 
+                    Debug.Log(couleur.ToString());
+                    Debug.Log(GameObject.FindGameObjectsWithTag(couleur.ToString()));
+
+                    //On initialise sa liste de pièces
+                    foreach (GameObject g in GameObject.FindGameObjectsWithTag(couleur.ToString()))
+                    {
+                        joueur.setDePieces.Add(g);
+                    }
+
+                    Debug.Log(joueur.setDePieces);
+
                     //Si c'est le premier joueur, alors c'est son tour
                     if (couleur.Equals(Couleur.ROUGE))
                     {
@@ -105,6 +116,8 @@ public class Blokus : MonoBehaviour
                 if (coordinate.x >= -10 && coordinate.x <= 9 && coordinate.y >= -11 && coordinate.y <= 8 && placementCorrect(piece, coordinate))
                 {
                     estEnMain = false;
+                    joueur.diminuerScore(piece.score);
+                    Debug.Log(joueur.score);
                     piece.estPosee = true;
                     joueur.aFaitSonPremierPlacement = true;
                     joueur.tour = false;
@@ -173,8 +186,8 @@ public class Blokus : MonoBehaviour
                 if (x == -11 || x == 10 || y == 9 || y == -12)
                 {
                     map.SetTile(p, bordure);
-                    choixQuartierDeCouleur(x, y, p);
                     blokus[x + 11, y + 12] = 10;
+                    choixQuartierDeCouleur(x, y, p);
                 }
                 else
                 {
@@ -190,18 +203,22 @@ public class Blokus : MonoBehaviour
         if (x == -11 && y == 9)
         {
             map.SetTile(p, rouge);
+            blokus[x + 11, y + 12] = 1;
         }
         else if (x == 10 && y == 9)
         {
             map.SetTile(p, bleu);
+            blokus[x + 11, y + 12] = 2;
         }
         else if (x == -11 && y == -12)
         {
             map.SetTile(p, jaune);
+            blokus[x + 11, y + 12] = 3;
         }
         else if (x == 10 && y == -12)
         {
             map.SetTile(p, vert);
+            blokus[x + 11, y + 12] = 4;
         }
     }
 
