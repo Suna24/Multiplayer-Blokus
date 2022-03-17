@@ -15,17 +15,12 @@ public class Blokus : MonoBehaviour
     bool estEnMain = false;
     Vector3Int coordinate;
     public Joueur joueur;
-    float positionInitialeX, positionInitialeY;
-    Quaternion rotationInitiale;
-    WebSocket webSocket;
+    WebSocket webSocket = SceneLoader.webSocket;
     public Text tourCourant;
 
     // Start is called before the first frame update
     void Start()
     {
-        //Gestion de la connection
-        webSocket = new WebSocket("ws://localhost:3000");
-        webSocket.Connect();
 
         webSocket.OnMessage += (sender, e) =>
         {
@@ -33,7 +28,7 @@ public class Blokus : MonoBehaviour
 
             Message message = JsonUtility.FromJson<Message>(e.Data);
 
-            switch (message.id)
+            switch (message.type)
             {
                 case "joueur":
 
@@ -121,7 +116,8 @@ public class Blokus : MonoBehaviour
                     piece.estPosee = true;
                     joueur.aFaitSonPremierPlacement = true;
                     joueur.tour = false;
-                    string json = JsonConvert.SerializeObject(blokus, Formatting.Indented);
+                    Message.MessageMiseAJourPlateau message = new Message.MessageMiseAJourPlateau("plateau", blokus);
+                    string json = JsonConvert.SerializeObject(message, Formatting.Indented);
                     Debug.Log(json);
                     webSocket.Send(json);
                 }
@@ -129,8 +125,8 @@ public class Blokus : MonoBehaviour
                 {
                     Debug.Log("Ne peut pas être placée ici");
                     estEnMain = false;
-                    piece.transform.position = new Vector2(positionInitialeX, positionInitialeY);
-                    piece.transform.rotation = rotationInitiale;
+                    piece.transform.position = new Vector2(piece.positionInitialeX, piece.positionInitialeY);
+                    piece.transform.rotation = piece.rotationInitiale;
                 }
             }
             else
@@ -141,10 +137,6 @@ public class Blokus : MonoBehaviour
                 if (hit.collider != null)
                 {
                     piece = hit.collider.gameObject.GetComponent<Piece>();
-
-                    positionInitialeX = piece.transform.position.x;
-                    positionInitialeY = piece.transform.position.y;
-                    rotationInitiale = piece.transform.rotation;
 
                     //On vérifie que la piece existe, qu'elle n'est pas posée définitivement sur le plateau et qu'elle fait partie
                     //du set de pieces du joueur (autrement dit sa couleur)
