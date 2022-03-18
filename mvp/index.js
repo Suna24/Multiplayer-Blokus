@@ -26,6 +26,7 @@ wss.on('connection', (ws, req) => {
         dataJson = JSON.parse(data);
 
         //Suivant le type du message on effectue différentes actions
+        console.log("Le type de message est " + dataJson.type);
         switch(dataJson.type){
 
             case "plateau":
@@ -38,7 +39,7 @@ wss.on('connection', (ws, req) => {
 
                 break;
 
-            case "createRoom":
+            case "creationRoom":
 
                 //On récupère les infos de la room
                 let nomRoom = dataJson.nom;
@@ -52,11 +53,24 @@ wss.on('connection', (ws, req) => {
 
                 //Sinon, on l'ajoute à la liste
                 let nombreDeJoueursRoom = dataJson.nombreDeJoueurs;
-                rooms.push(new Room(nomRoom, nombreDeJoueursRoom, ws));
+
+                console.log("Nom room : " + nomRoom);
+                console.log("NB joueurs de la room : " + nombreDeJoueursRoom);
+
+                let room = new Room(nomRoom, nombreDeJoueursRoom);
+
+                room.ajouterUneConnection(ws);
+                rooms.push(room);
                 
                 break;
 
+            case "joinRoom":
+
+                room.ajouterUneConnection(ws);
+                break;
+
             default:
+                console.log("Message non identifié !");
                 break;
         }
 
@@ -65,9 +79,6 @@ wss.on('connection', (ws, req) => {
     //Gestion lors de la déconnection d'un client
     ws.on('close', () => {
         console.log("Déconnection du serveur effectuée par " + id);
-
-        //On enlève le socket associé
-        joueurs.splice(joueurs.indexOf(ws), 1);
     })
 })
 

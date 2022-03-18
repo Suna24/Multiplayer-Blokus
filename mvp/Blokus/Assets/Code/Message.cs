@@ -24,7 +24,7 @@ public class Message
     public class MessageMiseAJourPlateau
     {
         public string type;
-        public string id;
+        public string nomRoom;
         public int[,] plateau;
 
         public MessageMiseAJourPlateau()
@@ -32,9 +32,10 @@ public class Message
 
         }
 
-        public MessageMiseAJourPlateau(string type, int[,] plateau)
+        public MessageMiseAJourPlateau(string type, string nomRoom, int[,] plateau)
         {
             this.type = type;
+            this.nomRoom = nomRoom;
             this.plateau = plateau;
         }
     }
@@ -54,15 +55,13 @@ public class Message
     public class MessageCreationRoom
     {
         public string type;
-        public string id;
         public string nom;
         public string pseudo;
         public int nombreDeJoueurs;
 
-        public MessageCreationRoom(string type, string id, string nom, string pseudo, int nombreDeJoueurs)
+        public MessageCreationRoom(string type, string nom, string pseudo, int nombreDeJoueurs)
         {
             this.type = type;
-            this.id = id;
             this.nom = nom;
             this.pseudo = pseudo;
             this.nombreDeJoueurs = nombreDeJoueurs;

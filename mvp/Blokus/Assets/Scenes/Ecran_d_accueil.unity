@@ -193,7 +193,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: "D\xE9marrer"
+  m_Text: "Cr\xE9er une partie"
 --- !u!222 &80118983
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -1084,7 +1084,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 2064183979}
         m_TargetAssemblyTypeName: SceneLoader, Assembly-CSharp
-        m_MethodName: demarrerPartie
+        m_MethodName: creerPartie
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

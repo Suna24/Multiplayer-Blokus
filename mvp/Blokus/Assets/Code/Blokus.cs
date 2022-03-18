@@ -15,12 +15,15 @@ public class Blokus : MonoBehaviour
     bool estEnMain = false;
     Vector3Int coordinate;
     public Joueur joueur;
-    WebSocket webSocket = SceneLoader.webSocket;
+    WebSocket webSocket = WebSocketClient.getInstance().GetWebSocket();
     public Text tourCourant;
 
     // Start is called before the first frame update
     void Start()
     {
+
+        Debug.Log("Script chargé");
+        webSocket.Connect();
 
         webSocket.OnMessage += (sender, e) =>
         {
@@ -116,7 +119,7 @@ public class Blokus : MonoBehaviour
                     piece.estPosee = true;
                     joueur.aFaitSonPremierPlacement = true;
                     joueur.tour = false;
-                    Message.MessageMiseAJourPlateau message = new Message.MessageMiseAJourPlateau("plateau", blokus);
+                    Message.MessageMiseAJourPlateau message = new Message.MessageMiseAJourPlateau("plateau", ""/*NOM DELA ROOM*/, blokus);
                     string json = JsonConvert.SerializeObject(message, Formatting.Indented);
                     Debug.Log(json);
                     webSocket.Send(json);
