@@ -15,17 +15,16 @@ public class Blokus : MonoBehaviour
     bool estEnMain = false;
     Vector3Int coordinate;
     public Joueur joueur;
-    WebSocket webSocket = WebSocketClient.getInstance().GetWebSocket();
+    WebSocketClient webSocketClient;
     public Text tourCourant;
 
     // Start is called before the first frame update
     void Start()
     {
 
-        Debug.Log("Script chargé");
-        webSocket.Connect();
+        webSocketClient = WebSocketClient.getInstance();
 
-        webSocket.OnMessage += (sender, e) =>
+        webSocketClient.GetWebSocket().OnMessage += (sender, e) =>
         {
             Debug.Log("Message du serveur : " + e.Data);
 
@@ -122,7 +121,7 @@ public class Blokus : MonoBehaviour
                     Message.MessageMiseAJourPlateau message = new Message.MessageMiseAJourPlateau("plateau", ""/*NOM DELA ROOM*/, blokus);
                     string json = JsonConvert.SerializeObject(message, Formatting.Indented);
                     Debug.Log(json);
-                    webSocket.Send(json);
+                    webSocketClient.GetWebSocket().Send(json);
                 }
                 else
                 {
@@ -413,9 +412,9 @@ public class Blokus : MonoBehaviour
 
     private void OnApplicationQuit()
     {
-        if (webSocket != null)
+        if (webSocketClient.GetWebSocket() != null)
         {
-            webSocket.Close();
+            webSocketClient.GetWebSocket().Close();
         }
     }
 }

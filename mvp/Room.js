@@ -15,7 +15,7 @@ class Room {
 
     ajouterUneConnection(ws){
 
-        console.log("Cbn de connections dans la room ? " + this.connections.length);
+        console.log("Cbn de connections dans la room avant l'ajout ? " + this.connections.length);
 
         if(this.connections.length < this.nombreDeJoueurs){
             this.connections.push(ws);
@@ -41,13 +41,12 @@ class Room {
                 couleurJouee = this.tableauDeCouleurs[i];
 
                 let requete = {
-                    type : "joueur",
+                    type : 'joueur',
                     couleurJouee : couleurJouee
                 }
 
-                console.log(JSON.stringify(requete));
+                setTimeout(() => { ws.send(JSON.stringify(requete)); }, 2000);
 
-                ws.send(JSON.stringify(requete));
                 break;
             }
         }

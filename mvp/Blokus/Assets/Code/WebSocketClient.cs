@@ -1,4 +1,5 @@
 using WebSocketSharp;
+using UnityEngine;
 
 class WebSocketClient
 {
@@ -24,6 +25,11 @@ class WebSocketClient
     public WebSocket GetWebSocket()
     {
         return webSocket;
+    }
+
+    public void Send(string message)
+    {
+        webSocket.Send(message);
     }
 
 }

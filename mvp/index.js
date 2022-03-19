@@ -18,11 +18,12 @@ wss.on('connection', (ws, req) => {
 
     var id = req.headers['sec-websocket-key'];
     console.log("Connection au serveur effectuée par " + id);
-
+    ws.send("Toto");
 
     //Lors de la réception d'un message venant de l'un des clients
     ws.on('message', (data) => {
 
+        console.log(JSON.parse(data));
         dataJson = JSON.parse(data);
 
         //Suivant le type du message on effectue différentes actions
@@ -56,6 +57,7 @@ wss.on('connection', (ws, req) => {
 
                 console.log("Nom room : " + nomRoom);
                 console.log("NB joueurs de la room : " + nombreDeJoueursRoom);
+                ws.send("Toto");
 
                 let room = new Room(nomRoom, nombreDeJoueursRoom);
 
@@ -75,6 +77,13 @@ wss.on('connection', (ws, req) => {
         }
 
     })
+
+    
+    wss.clients.forEach(function each(client) {
+        if (client.readyState === WebSocket.OPEN) {
+          client.send("Toto");
+        }
+    });
 
     //Gestion lors de la déconnection d'un client
     ws.on('close', () => {

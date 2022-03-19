@@ -28,6 +28,16 @@ public class RoomCreation : MonoBehaviour
             pseudo = pseudoInput.text;
         });
 
+        webSocketClient.GetWebSocket().OnMessage += (sender, e) =>
+        {
+            Debug.Log(e.Data);
+        };
+
+    }
+
+    public void Update()
+    {
+        Debug.Log(webSocketClient.GetWebSocket().ReadyState);
     }
 
     public void demarrerPartie()
@@ -61,6 +71,7 @@ public class RoomCreation : MonoBehaviour
             webSocketClient.GetWebSocket().Connect();
 
             webSocketClient.GetWebSocket().Send(JsonUtility.ToJson(messageCreationRoom));
+
         }
         else
         {
