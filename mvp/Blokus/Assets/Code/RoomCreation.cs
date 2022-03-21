@@ -11,9 +11,12 @@ public class RoomCreation : MonoBehaviour
     InputField pseudoInput;
     WebSocketClient webSocketClient;
     string nomDeLaPartie = "", pseudo = "";
+    bool roomExiste = false;
 
     public void Start()
     {
+
+        webSocketClient = WebSocketClient.webSocketClient;
 
         nomDeLaPartieInput = GameObject.Find("NomDeLaPartie").GetComponent<InputField>();
         pseudoInput = GameObject.Find("Pseudo").GetComponent<InputField>();
@@ -30,19 +33,17 @@ public class RoomCreation : MonoBehaviour
 
         webSocketClient.GetWebSocket().OnMessage += (sender, e) =>
         {
-            Debug.Log(e.Data);
+            if (e.Data == "Room")
+            {
+                roomExiste = true;
+            }
         };
 
     }
 
-    public void Update()
-    {
-        Debug.Log(webSocketClient.GetWebSocket().ReadyState);
-    }
-
     public void demarrerPartie()
     {
-        if (nomDeLaPartie.Trim() != "" && pseudo.Trim() != "")
+        if (nomDeLaPartie.Trim() != "" && pseudo.Trim() != "" && roomExiste == false)
         {
             creationRoom();
             SceneManager.LoadScene("Ecran_de_jeu");
@@ -67,9 +68,6 @@ public class RoomCreation : MonoBehaviour
             Message.MessageCreationRoom messageCreationRoom = new Message.MessageCreationRoom("creationRoom", nomDeLaPartie, pseudo, nombreDeJoueurs);
 
             //Gestion de la connection
-            webSocketClient = WebSocketClient.getInstance();
-            webSocketClient.GetWebSocket().Connect();
-
             webSocketClient.GetWebSocket().Send(JsonUtility.ToJson(messageCreationRoom));
 
         }

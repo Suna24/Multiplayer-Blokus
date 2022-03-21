@@ -1,7 +1,6 @@
 using UnityEngine.UI;
 using UnityEngine;
 using UnityEngine.Tilemaps;
-using WebSocketSharp;
 using System;
 using Newtonsoft.Json;
 

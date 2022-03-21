@@ -18,7 +18,6 @@ wss.on('connection', (ws, req) => {
 
     var id = req.headers['sec-websocket-key'];
     console.log("Connection au serveur effectuée par " + id);
-    ws.send("Toto");
 
     //Lors de la réception d'un message venant de l'un des clients
     ws.on('message', (data) => {
@@ -45,9 +44,13 @@ wss.on('connection', (ws, req) => {
                 //On récupère les infos de la room
                 let nomRoom = dataJson.nom;
 
+                console.log(rooms.length);
+
                 //Si la room possède le même nom qu'une autre, on ne la crée pas
-                for(let i = 0; i < rooms.lenght; i++){
-                    if(rooms[i] == nomRoom){
+                for(let i = 0; i < rooms.length; i++){
+                    if(rooms[i].nom == nomRoom){
+                        console.log("Une room porte déjà le nom " + nomRoom);
+                        ws.send("Room");
                         return;
                     }
                 }
@@ -57,7 +60,6 @@ wss.on('connection', (ws, req) => {
 
                 console.log("Nom room : " + nomRoom);
                 console.log("NB joueurs de la room : " + nombreDeJoueursRoom);
-                ws.send("Toto");
 
                 let room = new Room(nomRoom, nombreDeJoueursRoom);
 
@@ -66,9 +68,45 @@ wss.on('connection', (ws, req) => {
                 
                 break;
 
+            case "majRoom":
+
+                roomsToSend = [];
+
+                //Pour chaque rooms existante
+                rooms.forEach(element => {
+
+                    //On crée une room avec des paramètres particulier
+                    let room = {
+                        nom: element.nom,
+                        nbJoueursTotal: element.nombreDeJoueurs,
+                        nbJoueursCourant: element.nombreCourantDeConnection()
+                    }
+
+                    roomsToSend.push(room);
+                    
+                });
+
+                console.log(roomsToSend);
+
+                let requeteMiseAJourRoom = {
+                    rooms: roomsToSend
+                }
+
+                //On envoie toute la liste de rooms à tous les autres membres du serveur
+                setTimeout(() => {  ws.send(JSON.stringify(requeteMiseAJourRoom)); }, 2000);
+                            
+
+                break;
+
             case "joinRoom":
 
-                room.ajouterUneConnection(ws);
+                for(let i = 0; i < rooms.length; i++){
+                    if(rooms[i].nom == dataJson.nom){
+                        console.log("La connexion veut rejoindre la room " + nomRoom);
+                        rooms[i].ajouterUneConnection(ws);
+                        return;
+                    }
+                }
                 break;
 
             default:
@@ -77,13 +115,6 @@ wss.on('connection', (ws, req) => {
         }
 
     })
-
-    
-    wss.clients.forEach(function each(client) {
-        if (client.readyState === WebSocket.OPEN) {
-          client.send("Toto");
-        }
-    });
 
     //Gestion lors de la déconnection d'un client
     ws.on('close', () => {

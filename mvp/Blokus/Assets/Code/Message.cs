@@ -7,7 +7,11 @@ public class Message
 
     public Message()
     {
+    }
 
+    public Message(string type)
+    {
+        this.type = type;
     }
 
     public class MessageCreationJoueur
@@ -65,6 +69,28 @@ public class Message
             this.nom = nom;
             this.pseudo = pseudo;
             this.nombreDeJoueurs = nombreDeJoueurs;
+        }
+    }
+
+    public class MessageRoom
+    {
+        public string nom;
+        public int nbJoueursTotal;
+        public int nbJoueursCourant;
+
+        public MessageRoom()
+        {
+
+        }
+    }
+
+    public class MessageRooms
+    {
+        public MessageRoom[] rooms;
+
+        public MessageRooms()
+        {
+
         }
     }
 }

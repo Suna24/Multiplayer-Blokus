@@ -6,6 +6,8 @@ class Room {
     tableauDeCouleurs = [1, 2, 3, 4];
     couleurDisponibles = [true, true, true, true];
     indexDeParcoursDesJoueurs = 0;
+    nom;
+    nombreDeJoueurs;
 
     constructor(nom, nombreDeJoueurs){
         this.nom = nom;
@@ -14,8 +16,6 @@ class Room {
     }
 
     ajouterUneConnection(ws){
-
-        console.log("Cbn de connections dans la room avant l'ajout ? " + this.connections.length);
 
         if(this.connections.length < this.nombreDeJoueurs){
             this.connections.push(ws);
@@ -26,6 +26,12 @@ class Room {
             console.log("La room est pleine !");
         }
 
+        console.log("Cbn de connections dans la room ? " + this.connections.length);
+
+    }
+
+    nombreCourantDeConnection(){
+        return this.connections.length;
     }
 
     attributionCouleur(ws){
@@ -45,7 +51,7 @@ class Room {
                     couleurJouee : couleurJouee
                 }
 
-                setTimeout(() => { ws.send(JSON.stringify(requete)); }, 2000);
+                setTimeout(() => { ws.send(JSON.stringify(requete)); }, 1500);
 
                 break;
             }

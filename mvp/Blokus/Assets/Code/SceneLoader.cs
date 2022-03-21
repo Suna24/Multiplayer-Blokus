@@ -2,6 +2,9 @@ using UnityEngine.SceneManagement;
 using UnityEngine;
 public class SceneLoader : MonoBehaviour
 {
+
+    WebSocketClient webSocketClient = WebSocketClient.getInstance();
+
     public void quitter()
     {
         Application.Quit();
@@ -14,6 +17,8 @@ public class SceneLoader : MonoBehaviour
 
     public void rejoindreUnePartie()
     {
+        //Envoi d'une requête pour connaître toutes les rooms existantes
+        webSocketClient.GetWebSocket().Send(JsonUtility.ToJson(new Message("majRoom")));
         SceneManager.LoadScene("Ecran_rejoindre_partie");
     }
 
