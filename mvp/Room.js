@@ -48,10 +48,11 @@ class Room {
 
                 let requete = {
                     type : 'joueur',
-                    couleurJouee : couleurJouee
+                    couleurJouee : couleurJouee,
+                    nomRoom : this.nom
                 }
 
-                setTimeout(() => { ws.send(JSON.stringify(requete)); }, 1500);
+                setTimeout(() => { ws.send(JSON.stringify(requete)); }, 2000);
 
                 break;
             }

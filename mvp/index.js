@@ -31,8 +31,13 @@ wss.on('connection', (ws, req) => {
 
             case "plateau":
 
+                console.log(rooms);
+
                 for(let i = 0; i < rooms.lenght; i++){
-                    if(rooms[i].id = dataJson.id){
+
+                    console.log(rooms[i].nom + " : " + dataJson.nomRoom);
+
+                    if(rooms[i].nom = dataJson.nomRoom){
                         rooms[i].miseAJourDuPlateau();
                     }
                 }
@@ -100,9 +105,11 @@ wss.on('connection', (ws, req) => {
 
             case "joinRoom":
 
+                console.log(rooms);
+
                 for(let i = 0; i < rooms.length; i++){
-                    if(rooms[i].nom == dataJson.nom){
-                        console.log("La connexion veut rejoindre la room " + nomRoom);
+                    if(rooms[i].nom == dataJson.nomRoom){
+                        console.log("La connexion veut rejoindre la room " + dataJson.nomRoom);
                         rooms[i].ajouterUneConnection(ws);
                         return;
                     }

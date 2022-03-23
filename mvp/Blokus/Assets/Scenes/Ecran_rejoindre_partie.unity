@@ -417,7 +417,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 549707671}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 297134841}
+        m_TargetAssemblyTypeName: SceneLoader, Assembly-CSharp
+        m_MethodName: rejoindreUnePartie
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &549707671
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -868,6 +880,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   contenuContainer: {fileID: 1504121288}
   prefab: {fileID: 9066076253440741383, guid: e3eb08ea2e459534e91aa7054a47d51d, type: 3}
+  rejoindre: {fileID: 549707670}
 --- !u!4 &1322171491
 Transform:
   m_ObjectHideFlags: 0

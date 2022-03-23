@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 using Newtonsoft.Json;
-using System.Collections.Generic;
+using UnityEngine.SceneManagement;
 
 public class RoomJoin : MonoBehaviour
 {
@@ -14,6 +14,8 @@ public class RoomJoin : MonoBehaviour
     int[] nbJoueursTotal;
     bool aFini = false;
     int index = 0;
+    public Button rejoindre;
+    string nomDeLaRoomSelectionnee { get; set; }
 
 
     public void Start()
@@ -36,21 +38,22 @@ public class RoomJoin : MonoBehaviour
             //Pour chaque room présente sur le serveur on les affiche sous forme de boutons
             foreach (Message.MessageRoom room in messageRooms.rooms)
             {
-                Debug.Log(room.nom);
-                Debug.Log(room.nbJoueursCourant);
-                Debug.Log(room.nbJoueursTotal);
-
                 noms[index] = room.nom;
                 nbJoueursCourant[index] = room.nbJoueursCourant;
                 nbJoueursTotal[index] = room.nbJoueursTotal;
-
-                Debug.Log(index);
 
                 index++;
             }
 
             aFini = true;
         };
+
+        rejoindre.onClick.AddListener(() =>
+        {
+            Message.MessageJoinRoom messageJoinRoom = new Message.MessageJoinRoom("joinRoom", nomDeLaRoomSelectionnee);
+            webSocketClient.GetWebSocket().Send(JsonUtility.ToJson(messageJoinRoom));
+            SceneManager.LoadScene("Ecran_de_jeu");
+        });
 
     }
 
@@ -66,6 +69,14 @@ public class RoomJoin : MonoBehaviour
                 button.GetComponentInChildren<Text>().text = noms[i] + "        " + nbJoueursCourant[i] + "/" + nbJoueursTotal[i] + " joueurs";
                 button.transform.localScale = Vector3.one;
                 button.transform.SetParent(contenuContainer, false);
+
+                button.GetComponent<Button>().onClick.AddListener(() =>
+                {
+                    Debug.Log("Clic sur le bouton " + button.GetComponentInChildren<Text>().text);
+                    nomDeLaRoomSelectionnee = noms[button.transform.GetSiblingIndex()];
+                    rejoindre.interactable = true;
+
+                });
             }
 
             aFini = false;

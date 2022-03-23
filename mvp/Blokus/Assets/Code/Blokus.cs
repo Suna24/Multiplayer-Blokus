@@ -16,12 +16,13 @@ public class Blokus : MonoBehaviour
     public Joueur joueur;
     WebSocketClient webSocketClient;
     public Text tourCourant;
+    string nomRoom;
 
     // Start is called before the first frame update
     void Start()
     {
 
-        webSocketClient = WebSocketClient.getInstance();
+        webSocketClient = WebSocketClient.webSocketClient;
 
         webSocketClient.GetWebSocket().OnMessage += (sender, e) =>
         {
@@ -38,6 +39,8 @@ public class Blokus : MonoBehaviour
                     //Création du joueur
                     Couleur couleur = (Couleur)Enum.Parse(typeof(Couleur), messageCreationJoueur.couleurJouee.ToString());
                     joueur = new Joueur("Joueur " + e.Data, couleur);
+
+                    nomRoom = messageCreationJoueur.nomRoom;
 
                     Debug.Log(couleur.ToString());
                     Debug.Log(GameObject.FindGameObjectsWithTag(couleur.ToString()));
@@ -117,7 +120,7 @@ public class Blokus : MonoBehaviour
                     piece.estPosee = true;
                     joueur.aFaitSonPremierPlacement = true;
                     joueur.tour = false;
-                    Message.MessageMiseAJourPlateau message = new Message.MessageMiseAJourPlateau("plateau", ""/*NOM DELA ROOM*/, blokus);
+                    Message.MessageMiseAJourPlateau message = new Message.MessageMiseAJourPlateau("plateau", nomRoom, blokus);
                     string json = JsonConvert.SerializeObject(message, Formatting.Indented);
                     Debug.Log(json);
                     webSocketClient.GetWebSocket().Send(json);

@@ -18,6 +18,7 @@ public class Message
     {
         public string type;
         public int couleurJouee;
+        public string nomRoom;
 
         public MessageCreationJoueur()
         {
@@ -91,6 +92,18 @@ public class Message
         public MessageRooms()
         {
 
+        }
+    }
+
+    public class MessageJoinRoom
+    {
+        public string type;
+        public string nomRoom;
+
+        public MessageJoinRoom(string type, string nomRoom)
+        {
+            this.type = type;
+            this.nomRoom = nomRoom;
         }
     }
 }
