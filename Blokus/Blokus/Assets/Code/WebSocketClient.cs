@@ -63,6 +63,7 @@ class WebSocketClient
 
                 //Si c'est pour une mise à jour du plateau de jeu
                 case "plateau":
+                    Debug.Log("Dans mise à jour plateau");
                     blokus.plateau(e.Data);
                     break;
 
@@ -73,7 +74,6 @@ class WebSocketClient
 
                 //Si c'est pour afficher toutes les rooms disponibles
                 case "affichageRooms":
-                    Debug.Log("Dans Affichage Rooms");
                     roomJoin.affichageDesRooms(e.Data);
                     break;
 

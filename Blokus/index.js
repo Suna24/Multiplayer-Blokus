@@ -33,12 +33,13 @@ wss.on('connection', (ws, req) => {
 
                 console.log(rooms);
 
-                for(let i = 0; i < rooms.lenght; i++){
+                for(let i = 0; i < rooms.length; i++){
 
                     console.log(rooms[i].nom + " : " + dataJson.nomRoom);
 
-                    if(rooms[i].nom = dataJson.nomRoom){
-                        rooms[i].miseAJourDuPlateau();
+                    if(rooms[i].nom == dataJson.nomRoom){
+                        console.log("Mise à jour du plateau dans la room");
+                        rooms[i].miseAJourDuPlateau(data);
                     }
                 }
 

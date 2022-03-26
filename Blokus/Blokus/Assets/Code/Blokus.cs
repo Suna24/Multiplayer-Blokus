@@ -18,6 +18,20 @@ public class Blokus : MonoBehaviour
     public Text tourCourant;
     string nomRoom;
 
+    // Méthode Start appelée dès le lancement de la scène
+    void Start()
+    {
+
+        //On récupère l'instance du webSocket
+        webSocketClient = WebSocketClient.getInstance();
+        webSocketClient.setBlokus(this);
+
+        //Création de la map
+        creationDuPlateau();
+
+    }
+
+
     public void creationJoueur(string data)
     {
 
@@ -31,11 +45,11 @@ public class Blokus : MonoBehaviour
         nomRoom = messageCreationJoueur.nomRoom;
 
         Debug.Log(couleur.ToString());
-        Debug.Log(GameObject.FindGameObjectsWithTag(couleur.ToString()));
 
         //Si c'est le premier joueur, alors c'est son tour
         if (couleur.Equals(Couleur.ROUGE))
         {
+            Debug.Log("Je suis le joueur ROUGE");
             joueur.tour = true;
         }
     }
@@ -43,6 +57,8 @@ public class Blokus : MonoBehaviour
     public void plateau(string data)
     {
         Message.MessageMiseAJourPlateau messageMiseAJourPlateau = JsonConvert.DeserializeObject<Message.MessageMiseAJourPlateau>(data);
+
+        Debug.Log("Déserialisation réussie");
 
         for (int x = 0; x < 22; x++)
         {
@@ -67,19 +83,6 @@ public class Blokus : MonoBehaviour
         {
             tourCourant.text = "Tour de " + (Couleur)Enum.Parse(typeof(Couleur), majInterface.couleurTour.ToString());
         }
-    }
-
-    // Méthdoe Start appelée dès le lancement de la scène
-    void Start()
-    {
-
-        //On récupère l'instance du webSocket
-        webSocketClient = WebSocketClient.getInstance();
-        webSocketClient.setBlokus(this);
-
-        //Création de la map
-        creationDuPlateau();
-
     }
 
     // Update is called once per frame

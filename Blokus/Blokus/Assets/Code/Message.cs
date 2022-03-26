@@ -37,6 +37,12 @@ public class Message
 
         }
 
+        public MessageMiseAJourPlateau(string type, int[,] plateau)
+        {
+            this.type = type;
+            this.plateau = plateau;
+        }
+
         public MessageMiseAJourPlateau(string type, string nomRoom, int[,] plateau)
         {
             this.type = type;

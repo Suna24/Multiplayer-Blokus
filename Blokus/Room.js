@@ -60,29 +60,22 @@ class Room {
         }
     }
 
-    miseAJourDuPlateau(){
+    miseAJourDuPlateau(data){
+
+        let dataJson = JSON.parse(data);
+        console.log(dataJson);
+        let plateau = dataJson.plateau;
+
+        let requeteMiseAJourPlateau = {
+            type : "plateau",
+            plateau : plateau
+        }
+
+        //Envoi du message à toutes les connections de la room
         this.connections.forEach(ws => {
-
-            ws.on('message', (data) => {
-
-                //On transforme le message en JSON
-                dataJSON = JSON.parse(data);
-                plateau = dataJSON.plateau;
-
-                let requeteMiseAJourPlateau = {
-                    type : "plateau",
-                    plateau : plateau
-                }
-
-                //Envoi du message à toutes les connections de la room
-                this.connections.forEach(ws => {
-                    if (ws.readyState === WebSocket.OPEN) {
-                        ws.send(JSON.stringify(requeteMiseAJourPlateau));
-                    }
-                })
-
-            })
-    
+            if (ws.readyState === WebSocket.OPEN) {
+                ws.send(JSON.stringify(requeteMiseAJourPlateau));
+            }
         })
 
         this.miseAJourDuTour();
