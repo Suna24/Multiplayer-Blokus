@@ -87,6 +87,7 @@ public class Message
 
     public class MessageRooms
     {
+        public string type;
         public MessageRoom[] rooms;
 
         public MessageRooms()

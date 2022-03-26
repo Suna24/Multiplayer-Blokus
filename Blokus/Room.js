@@ -8,6 +8,7 @@ class Room {
     indexDeParcoursDesJoueurs = 0;
     nom;
     nombreDeJoueurs;
+    scores = [];
 
     constructor(nom, nombreDeJoueurs){
         this.nom = nom;
@@ -52,7 +53,7 @@ class Room {
                     nomRoom : this.nom
                 }
 
-                setTimeout(() => { ws.send(JSON.stringify(requete)); }, 2000);
+                setTimeout(() => { ws.send(JSON.stringify(requete)); }, 5000);
 
                 break;
             }
@@ -115,6 +116,22 @@ class Room {
             })
     
         })
+    }
+
+    calculDesScores(){
+
+        let requeteScore = {
+            type: "score",
+            scores: this.scores
+        }
+
+        //Envoi du message à toutes les connections de la room
+        this.connections.forEach(client => {
+            if (client.readyState === WebSocket.OPEN) {
+                client.send(JSON.stringify(requeteScore));
+            }
+        })
+
     }
 
 }

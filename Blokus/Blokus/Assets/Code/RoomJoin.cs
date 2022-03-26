@@ -20,41 +20,41 @@ public class RoomJoin : MonoBehaviour
 
     public void Start()
     {
-        webSocketClient = WebSocketClient.webSocketClient;
-
-        //Listener pour la réponse du serveur
-        webSocketClient.GetWebSocket().OnMessage += (sender, e) =>
-        {
-            Debug.Log(e.Data);
-
-            Message.MessageRooms messageRooms = JsonConvert.DeserializeObject<Message.MessageRooms>(e.Data);
-
-            int taille = messageRooms.rooms.GetLength(0);
-
-            noms = new string[taille];
-            nbJoueursCourant = new int[taille];
-            nbJoueursTotal = new int[taille];
-
-            //Pour chaque room présente sur le serveur on les affiche sous forme de boutons
-            foreach (Message.MessageRoom room in messageRooms.rooms)
-            {
-                noms[index] = room.nom;
-                nbJoueursCourant[index] = room.nbJoueursCourant;
-                nbJoueursTotal[index] = room.nbJoueursTotal;
-
-                index++;
-            }
-
-            aFini = true;
-        };
+        webSocketClient = WebSocketClient.getInstance();
+        webSocketClient.setRoomJoin(this);
 
         rejoindre.onClick.AddListener(() =>
         {
             Message.MessageJoinRoom messageJoinRoom = new Message.MessageJoinRoom("joinRoom", nomDeLaRoomSelectionnee);
-            webSocketClient.GetWebSocket().Send(JsonUtility.ToJson(messageJoinRoom));
+            webSocketClient.Send(JsonUtility.ToJson(messageJoinRoom));
             SceneManager.LoadScene("Ecran_de_jeu");
         });
 
+    }
+
+    public void affichageDesRooms(string data)
+    {
+        Debug.Log(data);
+
+        Message.MessageRooms messageRooms = JsonConvert.DeserializeObject<Message.MessageRooms>(data);
+
+        int taille = messageRooms.rooms.GetLength(0);
+
+        noms = new string[taille];
+        nbJoueursCourant = new int[taille];
+        nbJoueursTotal = new int[taille];
+
+        //Pour chaque room présente sur le serveur on les affiche sous forme de boutons
+        foreach (Message.MessageRoom room in messageRooms.rooms)
+        {
+            noms[index] = room.nom;
+            nbJoueursCourant[index] = room.nbJoueursCourant;
+            nbJoueursTotal[index] = room.nbJoueursTotal;
+
+            index++;
+        }
+
+        aFini = true;
     }
 
     public void Update()

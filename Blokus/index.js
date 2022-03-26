@@ -94,6 +94,7 @@ wss.on('connection', (ws, req) => {
                 console.log(roomsToSend);
 
                 let requeteMiseAJourRoom = {
+                    type: "affichageRooms",
                     rooms: roomsToSend
                 }
 
@@ -114,6 +115,12 @@ wss.on('connection', (ws, req) => {
                         return;
                     }
                 }
+                break;
+
+            case "score":
+
+                
+
                 break;
 
             default:

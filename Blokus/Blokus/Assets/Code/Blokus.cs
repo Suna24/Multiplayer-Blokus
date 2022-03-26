@@ -18,83 +18,64 @@ public class Blokus : MonoBehaviour
     public Text tourCourant;
     string nomRoom;
 
-    // Start is called before the first frame update
+    public void creationJoueur(string data)
+    {
+
+        //On désérialise le message
+        Message.MessageCreationJoueur messageCreationJoueur = JsonUtility.FromJson<Message.MessageCreationJoueur>(data);
+
+        //Création du joueur
+        Couleur couleur = (Couleur)Enum.Parse(typeof(Couleur), messageCreationJoueur.couleurJouee.ToString());
+        joueur = new Joueur("Joueur " + data, couleur);
+
+        nomRoom = messageCreationJoueur.nomRoom;
+
+        Debug.Log(couleur.ToString());
+        Debug.Log(GameObject.FindGameObjectsWithTag(couleur.ToString()));
+
+        //Si c'est le premier joueur, alors c'est son tour
+        if (couleur.Equals(Couleur.ROUGE))
+        {
+            joueur.tour = true;
+        }
+    }
+
+    public void plateau(string data)
+    {
+        Message.MessageMiseAJourPlateau messageMiseAJourPlateau = JsonConvert.DeserializeObject<Message.MessageMiseAJourPlateau>(data);
+
+        for (int x = 0; x < 22; x++)
+        {
+            for (int y = 0; y < 22; y++)
+            {
+                blokus[x, y] = messageMiseAJourPlateau.plateau[x, y];
+            }
+        }
+        miseAJourDuPlateau();
+    }
+
+    public void tour(string data)
+    {
+        Message.MessageMiseAJourInterface majInterface = JsonUtility.FromJson<Message.MessageMiseAJourInterface>(data);
+
+        if (majInterface.tourCourant == true)
+        {
+            joueur.tour = true;
+            tourCourant.text = "C'est mon tour";
+        }
+        else
+        {
+            tourCourant.text = "Tour de " + (Couleur)Enum.Parse(typeof(Couleur), majInterface.couleurTour.ToString());
+        }
+    }
+
+    // Méthdoe Start appelée dès le lancement de la scène
     void Start()
     {
 
-        webSocketClient = WebSocketClient.webSocketClient;
-
-        webSocketClient.GetWebSocket().OnMessage += (sender, e) =>
-        {
-            Debug.Log("Message du serveur : " + e.Data);
-
-            Message message = JsonUtility.FromJson<Message>(e.Data);
-
-            switch (message.type)
-            {
-                case "joueur":
-
-                    Message.MessageCreationJoueur messageCreationJoueur = JsonUtility.FromJson<Message.MessageCreationJoueur>(e.Data);
-
-                    //Création du joueur
-                    Couleur couleur = (Couleur)Enum.Parse(typeof(Couleur), messageCreationJoueur.couleurJouee.ToString());
-                    joueur = new Joueur("Joueur " + e.Data, couleur);
-
-                    nomRoom = messageCreationJoueur.nomRoom;
-
-                    Debug.Log(couleur.ToString());
-                    Debug.Log(GameObject.FindGameObjectsWithTag(couleur.ToString()));
-
-                    //On initialise sa liste de pièces
-                    foreach (GameObject g in GameObject.FindGameObjectsWithTag(couleur.ToString()))
-                    {
-                        joueur.setDePieces.Add(g);
-                    }
-
-                    Debug.Log(joueur.setDePieces);
-
-                    //Si c'est le premier joueur, alors c'est son tour
-                    if (couleur.Equals(Couleur.ROUGE))
-                    {
-                        joueur.tour = true;
-                    }
-
-                    break;
-
-                case "plateau":
-
-                    Message.MessageMiseAJourPlateau messageMiseAJourPlateau = JsonConvert.DeserializeObject<Message.MessageMiseAJourPlateau>(e.Data);
-
-                    for (int x = 0; x < 22; x++)
-                    {
-                        for (int y = 0; y < 22; y++)
-                        {
-                            blokus[x, y] = messageMiseAJourPlateau.plateau[x, y];
-                        }
-                    }
-                    miseAJourDuPlateau();
-                    break;
-
-                case "tour":
-
-                    Message.MessageMiseAJourInterface majInterface = JsonUtility.FromJson<Message.MessageMiseAJourInterface>(e.Data);
-
-                    if (majInterface.tourCourant == true)
-                    {
-                        joueur.tour = true;
-                        tourCourant.text = "C'est mon tour";
-                    }
-                    else
-                    {
-                        tourCourant.text = "Tour de " + (Couleur)Enum.Parse(typeof(Couleur), majInterface.couleurTour.ToString());
-                    }
-                    break;
-
-                default:
-                    Debug.Log("Message inconnu");
-                    break;
-            }
-        };
+        //On récupère l'instance du webSocket
+        webSocketClient = WebSocketClient.getInstance();
+        webSocketClient.setBlokus(this);
 
         //Création de la map
         creationDuPlateau();

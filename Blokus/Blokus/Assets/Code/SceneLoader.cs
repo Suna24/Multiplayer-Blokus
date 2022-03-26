@@ -36,4 +36,11 @@ public class SceneLoader : MonoBehaviour
     {
         SceneManager.LoadScene("Ecran_creation_partie");
     }
+
+    public void affichageDesScores()
+    {
+        webSocketClient.GetWebSocket().Send(JsonUtility.ToJson(new Message("score")));
+        SceneManager.LoadScene("Ecran_des_scores");
+    }
+
 }
