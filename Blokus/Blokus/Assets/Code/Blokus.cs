@@ -74,6 +74,8 @@ public class Blokus : MonoBehaviour
     {
         Message.MessageMiseAJourInterface majInterface = JsonUtility.FromJson<Message.MessageMiseAJourInterface>(data);
 
+        Debug.Log(majInterface.tourCourant);
+
         if (majInterface.tourCourant == true)
         {
             joueur.tour = true;

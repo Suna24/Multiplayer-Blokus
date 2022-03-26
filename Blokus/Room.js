@@ -53,7 +53,7 @@ class Room {
                     nomRoom : this.nom
                 }
 
-                setTimeout(() => { ws.send(JSON.stringify(requete)); }, 5000);
+                setTimeout(() => { ws.send(JSON.stringify(requete)); }, 2000);
 
                 break;
             }
@@ -82,32 +82,29 @@ class Room {
     }
 
     miseAJourDuTour(){
-        this.connections.forEach(ws => {
 
-            ws.on('message', (data) => {
+        //C'est le tour du joueur suivant
+        if(this.indexDeParcoursDesJoueurs == (this.connections.length - 1)){
+            this.indexDeParcoursDesJoueurs = 0;
+        } else {
+            this.indexDeParcoursDesJoueurs++;
+        }
 
-                //C'est le tour du joueur suivant
-                if(this.indexDeParcoursDesJoueurs == (this.connections.length - 1)){
-                    this.indexDeParcoursDesJoueurs = 0;
-                } else {
-                    this.indexDeParcoursDesJoueurs++;
-                }
+        console.log(this.indexDeParcoursDesJoueurs);
+        console.log(this.tableauDeCouleurs[this.indexDeParcoursDesJoueurs]);
 
-                let requeteTour = {
-                    type: "tour",
-                    tourCourant: true,
-                    couleurTour: this.tableauDeCouleurs[indexDeParcoursDesJoueurs]
-                }
+        let requeteTour = {
+            type: "tour",
+            tourCourant: true,
+            couleurTour: this.tableauDeCouleurs[this.indexDeParcoursDesJoueurs]
+        }
 
-                //Envoi du message à toutes les connections de la room
-                this.connections.forEach(client => {
-                    if (client.readyState === WebSocket.OPEN && client === this.connections[indexDeParcoursDesJoueurs]) {
-                        client.send(JSON.stringify(requeteTour));
-                    }
-                })
-
-            })
-    
+        //Envoi du message à toutes les connections de la room
+        this.connections.forEach(client => {
+            if (client.readyState === WebSocket.OPEN && client === this.connections[this.indexDeParcoursDesJoueurs]) {
+                console.log("Envoi à la connection dont c'est le tour");
+                client.send(JSON.stringify(requeteTour));
+            }
         })
     }
 
