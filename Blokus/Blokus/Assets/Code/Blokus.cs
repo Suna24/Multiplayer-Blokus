@@ -3,6 +3,7 @@ using UnityEngine;
 using UnityEngine.Tilemaps;
 using System;
 using Newtonsoft.Json;
+using UnityEngine.SceneManagement;
 
 public class Blokus : MonoBehaviour
 {
@@ -17,6 +18,7 @@ public class Blokus : MonoBehaviour
     WebSocketClient webSocketClient;
     public Text tourCourant;
     string nomRoom;
+    public Button fin;
 
     // Méthode Start appelée dès le lancement de la scène
     void Start()
@@ -28,6 +30,13 @@ public class Blokus : MonoBehaviour
 
         //Création de la map
         creationDuPlateau();
+
+        //Listener sur le bouton Fin
+        fin.onClick.AddListener(() =>
+        {
+            webSocketClient.GetWebSocket().Send(JsonUtility.ToJson(new Message("score")));
+            SceneManager.LoadScene("Ecran_des_scores");
+        });
 
     }
 
@@ -57,8 +66,6 @@ public class Blokus : MonoBehaviour
     public void plateau(string data)
     {
         Message.MessageMiseAJourPlateau messageMiseAJourPlateau = JsonConvert.DeserializeObject<Message.MessageMiseAJourPlateau>(data);
-
-        Debug.Log("Déserialisation réussie");
 
         for (int x = 0; x < 22; x++)
         {

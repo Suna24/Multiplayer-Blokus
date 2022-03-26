@@ -81,14 +81,21 @@ wss.on('connection', (ws, req) => {
                 //Pour chaque rooms existante
                 rooms.forEach(element => {
 
-                    //On crée une room avec des paramètres particulier
-                    let room = {
-                        nom: element.nom,
-                        nbJoueursTotal: element.nombreDeJoueurs,
-                        nbJoueursCourant: element.nombreCourantDeConnection()
-                    }
+                    console.log(element.nombreCourantDeConnection());
+                    console.log(element.nombreDeJoueurs);
 
-                    roomsToSend.push(room);
+                    //Si la room n'est pas pleine
+                    if(element.nombreCourantDeConnection() < element.nombreDeJoueurs){
+
+                        //On crée une room avec des paramètres particulier
+                        let room = {
+                            nom: element.nom,
+                            nbJoueursTotal: element.nombreDeJoueurs,
+                            nbJoueursCourant: element.nombreCourantDeConnection()
+                        }
+
+                        roomsToSend.push(room);
+                    }
                     
                 });
 
@@ -100,8 +107,7 @@ wss.on('connection', (ws, req) => {
                 }
 
                 //On envoie toute la liste de rooms à tous les autres membres du serveur
-                setTimeout(() => {  ws.send(JSON.stringify(requeteMiseAJourRoom)); }, 2000);
-                            
+                setTimeout(() => {  ws.send(JSON.stringify(requeteMiseAJourRoom)); }, 2000);           
 
                 break;
 
