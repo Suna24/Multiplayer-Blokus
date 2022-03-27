@@ -39,7 +39,7 @@ wss.on('connection', (ws, req) => {
 
                     if(rooms[i].nom == dataJson.nomRoom){
                         console.log("Mise à jour du plateau dans la room");
-                        rooms[i].miseAJourDuPlateau(data);
+                        rooms[i].miseAJourDuPlateau(ws, data);
                     }
                 }
 
@@ -124,9 +124,14 @@ wss.on('connection', (ws, req) => {
                 }
                 break;
 
-            case "score":
+            case "scores":
 
-                
+                for(let i = 0; i < rooms.length; i++){
+                    if(rooms[i].nom == dataJson.nomRoom){
+                        rooms[i].envoiDesScores();
+                        return;
+                    }
+                }
 
                 break;
 

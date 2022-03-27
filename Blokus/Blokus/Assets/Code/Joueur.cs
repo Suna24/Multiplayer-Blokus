@@ -7,7 +7,7 @@ public class Joueur
 {
     //Attributs
     public string nom { get; set; }
-    public int score;
+    public int score { get; set; }
     public Couleur couleurJouee { get; }
     public bool aFaitSonPremierPlacement { get; set; }
     public List<GameObject> setDePieces;

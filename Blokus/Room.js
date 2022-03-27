@@ -60,11 +60,16 @@ class Room {
         }
     }
 
-    miseAJourDuPlateau(data){
+    miseAJourDuPlateau(webSocket, data){
 
         let dataJson = JSON.parse(data);
         console.log(dataJson);
         let plateau = dataJson.plateau;
+
+        let index = this.connections.indexOf(webSocket);
+        console.log(index);
+        this.scores[index] = dataJson.score;
+        console.log(this.scores);
 
         let requeteMiseAJourPlateau = {
             type : "plateau",
@@ -90,9 +95,6 @@ class Room {
             this.indexDeParcoursDesJoueurs++;
         }
 
-        console.log(this.indexDeParcoursDesJoueurs);
-        console.log(this.tableauDeCouleurs[this.indexDeParcoursDesJoueurs]);
-
         let requeteTour = {
             type: "tour",
             tourCourant: true,
@@ -102,26 +104,25 @@ class Room {
         //Envoi du message à toutes les connections de la room
         this.connections.forEach(client => {
             if (client.readyState === WebSocket.OPEN && client === this.connections[this.indexDeParcoursDesJoueurs]) {
-                console.log("Envoi à la connection dont c'est le tour");
                 client.send(JSON.stringify(requeteTour));
             }
         })
     }
 
-    calculDesScores(){
+    envoiDesScores(){
 
         let requeteScore = {
-            type: "score",
+            type: "scores",
             scores: this.scores
         }
 
         //Envoi du message à toutes les connections de la room
-        this.connections.forEach(client => {
-            if (client.readyState === WebSocket.OPEN) {
-                client.send(JSON.stringify(requeteScore));
-            }
-        })
-
+         
+            this.connections.forEach(client => {
+                if (client.readyState === WebSocket.OPEN) {
+                    setTimeout(() => { client.send(JSON.stringify(requeteScore)); }, 2000);
+                }
+            })
     }
 
 }

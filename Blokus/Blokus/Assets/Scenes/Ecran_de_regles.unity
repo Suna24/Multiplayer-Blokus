@@ -284,7 +284,6 @@ GameObject:
   - component: {fileID: 141705342}
   - component: {fileID: 141705341}
   - component: {fileID: 141705340}
-  - component: {fileID: 141705339}
   m_Layer: 5
   m_Name: Retour
   m_TagString: Untagged
@@ -312,18 +311,6 @@ RectTransform:
   m_AnchoredPosition: {x: 4.3999996, y: -104.182}
   m_SizeDelta: {x: 187.264, y: 39.454}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &141705339
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 141705337}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0f31ff531003904409607cf756be9a30, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &141705340
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -729,7 +716,6 @@ GameObject:
   - component: {fileID: 1402614069}
   - component: {fileID: 1402614068}
   - component: {fileID: 1402614067}
-  - component: {fileID: 1402614066}
   m_Layer: 5
   m_Name: "R\xE8gles"
   m_TagString: Untagged
@@ -757,18 +743,6 @@ RectTransform:
   m_AnchoredPosition: {x: 4.4, y: -46.3}
   m_SizeDelta: {x: 187.264, y: 39.454}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &1402614066
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1402614064}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0f31ff531003904409607cf756be9a30, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &1402614067
 MonoBehaviour:
   m_ObjectHideFlags: 0

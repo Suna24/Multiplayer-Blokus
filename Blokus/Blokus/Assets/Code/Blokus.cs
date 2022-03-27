@@ -34,7 +34,7 @@ public class Blokus : MonoBehaviour
         //Listener sur le bouton Fin
         fin.onClick.AddListener(() =>
         {
-            webSocketClient.GetWebSocket().Send(JsonUtility.ToJson(new Message("score")));
+            webSocketClient.GetWebSocket().Send(JsonUtility.ToJson(new Message.MessageScores("scores", nomRoom)));
             SceneManager.LoadScene("Ecran_des_scores");
         });
 
@@ -113,7 +113,7 @@ public class Blokus : MonoBehaviour
                     piece.estPosee = true;
                     joueur.aFaitSonPremierPlacement = true;
                     joueur.tour = false;
-                    Message.MessageMiseAJourPlateau message = new Message.MessageMiseAJourPlateau("plateau", nomRoom, blokus);
+                    Message.MessageMiseAJourPlateau message = new Message.MessageMiseAJourPlateau("plateau", joueur.score, nomRoom, blokus);
                     string json = JsonConvert.SerializeObject(message, Formatting.Indented);
                     Debug.Log(json);
                     webSocketClient.GetWebSocket().Send(json);

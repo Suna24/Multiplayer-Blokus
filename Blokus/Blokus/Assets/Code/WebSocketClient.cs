@@ -1,5 +1,6 @@
 using WebSocketSharp;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 class WebSocketClient
 {
@@ -9,6 +10,7 @@ class WebSocketClient
     private WebSocket webSocket;
     public Blokus blokus;
     public RoomJoin roomJoin;
+    public ScoreUI scoreUI;
 
     //Constructeur
     private WebSocketClient()
@@ -77,6 +79,12 @@ class WebSocketClient
                     roomJoin.affichageDesRooms(e.Data);
                     break;
 
+                //Si c'est pour afficher les scores et que la partie est terminée
+                case "scores":
+                    SceneManager.LoadScene("Ecran_des_scores");
+                    scoreUI.affichageDesScores(e.Data);
+                    break;
+
                 //Message par défaut si le message n'est pas identifié
                 default:
                     Debug.Log("Message non identifié");
@@ -95,6 +103,12 @@ class WebSocketClient
     public void setRoomJoin(RoomJoin roomJoin)
     {
         this.roomJoin = roomJoin;
+    }
+
+    //Méthode pour setup le scoreUI
+    public void setScoreUI(ScoreUI scoreUI)
+    {
+        this.scoreUI = scoreUI;
     }
 
 }
