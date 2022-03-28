@@ -81,7 +81,7 @@ class WebSocketClient
 
                 //Si c'est pour afficher les scores et que la partie est terminée
                 case "scores":
-                    SceneManager.LoadScene("Ecran_des_scores");
+                    //SceneManager.LoadScene("Ecran_des_scores");
                     scoreUI.affichageDesScores(e.Data);
                     break;
 

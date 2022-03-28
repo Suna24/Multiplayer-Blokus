@@ -128,7 +128,7 @@ public class Message
     {
         public string type;
         public string nomRoom;
-        public string scores;
+        public int[] scores;
 
         public MessageScores()
         {
@@ -139,6 +139,12 @@ public class Message
         {
             this.type = type;
             this.nomRoom = nomRoom;
+        }
+
+        public MessageScores(string type, int[] scores)
+        {
+            this.type = type;
+            this.scores = scores;
         }
     }
 }
