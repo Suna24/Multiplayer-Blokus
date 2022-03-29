@@ -1,6 +1,6 @@
 using WebSocketSharp;
 using UnityEngine;
-using UnityEngine.SceneManagement;
+using System.Web;
 
 class WebSocketClient
 {
@@ -81,7 +81,7 @@ class WebSocketClient
 
                 //Si c'est pour afficher les scores et que la partie est terminée
                 case "scores":
-                    //SceneManager.LoadScene("Ecran_des_scores");
+                    blokus.fin.onClick.Invoke();
                     scoreUI.affichageDesScores(e.Data);
                     break;
 

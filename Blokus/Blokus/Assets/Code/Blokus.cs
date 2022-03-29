@@ -34,12 +34,11 @@ public class Blokus : MonoBehaviour
         //Listener sur le bouton Fin
         fin.onClick.AddListener(() =>
         {
-            webSocketClient.GetWebSocket().Send(JsonUtility.ToJson(new Message.MessageScores("scores", nomRoom)));
             SceneManager.LoadScene("Ecran_des_scores");
+            webSocketClient.GetWebSocket().Send(JsonUtility.ToJson(new Message.MessageScores("scores", nomRoom)));
         });
 
     }
-
 
     public void creationJoueur(string data)
     {
@@ -97,6 +96,7 @@ public class Blokus : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+
         if (Input.GetMouseButtonDown(0) && joueur.tour == true)
         {
             Vector2 pos = Camera.main.ScreenToWorldPoint(Input.mousePosition);

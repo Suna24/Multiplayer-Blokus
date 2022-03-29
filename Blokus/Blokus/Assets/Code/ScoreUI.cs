@@ -37,20 +37,21 @@ public class ScoreUI : MonoBehaviour
         }
 
         aTermine = true;
-        Array.Sort(scores);
-
     }
 
     // Update is called once per frame
     void Update()
     {
 
+        Debug.Log("Here");
+
         if (aTermine)
         {
 
-            for (int i = scores.Length; i > 0; i--)
+            for (int i = 0; i < scores.Length; i++)
             {
-                classement[i].text = "" + scores[i];
+                Debug.Log("Dans la boucle");
+                classement[i].text = "" + scores[i] + " blocs restants";
             }
 
         }
