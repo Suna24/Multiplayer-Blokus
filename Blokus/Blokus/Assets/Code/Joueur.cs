@@ -24,6 +24,12 @@ public class Joueur
         setDePieces = new List<GameObject>();
     }
 
+    public Joueur(int score, Couleur couleur)
+    {
+        this.score = score;
+        this.couleurJouee = couleur;
+    }
+
     public void diminuerScore(int score)
     {
         this.score -= score;

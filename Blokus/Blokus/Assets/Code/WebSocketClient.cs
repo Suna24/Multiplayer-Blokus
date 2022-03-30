@@ -1,6 +1,6 @@
 using WebSocketSharp;
 using UnityEngine;
-using System.Web;
+using UnityEngine.SceneManagement;
 
 class WebSocketClient
 {
@@ -11,6 +11,8 @@ class WebSocketClient
     public Blokus blokus;
     public RoomJoin roomJoin;
     public ScoreUI scoreUI;
+
+    public bool fin = false;
 
     //Constructeur
     private WebSocketClient()
@@ -79,9 +81,12 @@ class WebSocketClient
                     roomJoin.affichageDesRooms(e.Data);
                     break;
 
+                case "finPartie":
+                    fin = true;
+                    break;
+
                 //Si c'est pour afficher les scores et que la partie est terminée
                 case "scores":
-                    blokus.fin.onClick.Invoke();
                     scoreUI.affichageDesScores(e.Data);
                     break;
 

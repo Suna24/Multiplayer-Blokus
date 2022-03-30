@@ -18,7 +18,7 @@ public class Blokus : MonoBehaviour
     WebSocketClient webSocketClient;
     public Text tourCourant;
     string nomRoom;
-    public Button fin;
+    public Button fin, invisible;
 
     // Méthode Start appelée dès le lancement de la scène
     void Start()
@@ -31,11 +31,17 @@ public class Blokus : MonoBehaviour
         //Création de la map
         creationDuPlateau();
 
+        invisible.gameObject.SetActive(false);
+
         //Listener sur le bouton Fin
         fin.onClick.AddListener(() =>
         {
+            webSocketClient.GetWebSocket().Send(JsonUtility.ToJson(new Message.MessageScores("finPartie", nomRoom)));
+        });
+
+        invisible.onClick.AddListener(() =>
+        {
             SceneManager.LoadScene("Ecran_des_scores");
-            webSocketClient.GetWebSocket().Send(JsonUtility.ToJson(new Message.MessageScores("scores", nomRoom)));
         });
 
     }
@@ -96,6 +102,11 @@ public class Blokus : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+
+        if (webSocketClient.fin)
+        {
+            invisible.onClick.Invoke();
+        }
 
         if (Input.GetMouseButtonDown(0) && joueur.tour == true)
         {

@@ -109,20 +109,30 @@ class Room {
         })
     }
 
-    envoiDesScores(){
+    envoiDesScores(ws){
 
         let requeteScore = {
             type: "scores",
             scores: this.scores
         }
 
-        //Envoi du message à toutes les connections de la room
-         
-            this.connections.forEach(client => {
-                if (client.readyState === WebSocket.OPEN) {
-                    setTimeout(() => { client.send(JSON.stringify(requeteScore)); }, 2000);
-                }
-            })
+        console.log(requeteScore);
+
+        //Envoi du message à la connexion de la room
+        setTimeout(() => { ws.send(JSON.stringify(requeteScore)); }, 2000);
+    }
+
+    finPartie(){
+
+        let requete = {
+            type: "finPartie"
+        }
+
+        this.connections.forEach(client => {
+            if (client.readyState === WebSocket.OPEN) {
+                 client.send(JSON.stringify(requete));
+            }
+        })
     }
 
 }

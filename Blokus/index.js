@@ -2,6 +2,7 @@
 const WebSocket = require('ws');
 const Room = require('./Room');
 rooms = [];
+let roomCourante;
 
 //Création du serveur
 const wss = new WebSocket.Server({port:3000}, () =>{
@@ -124,11 +125,22 @@ wss.on('connection', (ws, req) => {
                 }
                 break;
 
+            case "finPartie":
+                for(let i = 0; i < rooms.length; i++){
+                    if(rooms[i].nom == dataJson.nomRoom){
+                        roomCourante = dataJson.nomRoom;
+                        rooms[i].finPartie();
+                        return;
+                    }
+                }
+
+                break;
+
             case "scores":
 
                 for(let i = 0; i < rooms.length; i++){
-                    if(rooms[i].nom == dataJson.nomRoom){
-                        rooms[i].envoiDesScores();
+                    if(rooms[i].nom == roomCourante){
+                        rooms[i].envoiDesScores(ws);
                         return;
                     }
                 }

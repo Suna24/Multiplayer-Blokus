@@ -1,7 +1,9 @@
 using UnityEngine.UI;
 using UnityEngine;
 using Newtonsoft.Json;
+using System.Collections.Generic;
 using System;
+using System.Linq;
 
 public class ScoreUI : MonoBehaviour
 {
@@ -10,6 +12,7 @@ public class ScoreUI : MonoBehaviour
     public Text premier, second, troisieme, quatrieme;
     Text[] classement;
     int[] scores;
+    List<Joueur> joueurs = new List<Joueur>();
     bool aTermine = false;
 
     // Start is called before the first frame update
@@ -17,6 +20,8 @@ public class ScoreUI : MonoBehaviour
     {
         webSocketClient = WebSocketClient.getInstance();
         webSocketClient.setScoreUI(this);
+
+        webSocketClient.GetWebSocket().Send(JsonUtility.ToJson(new Message("scores")));
 
         classement = new Text[4] { premier, second, troisieme, quatrieme };
     }
@@ -33,10 +38,15 @@ public class ScoreUI : MonoBehaviour
 
         for (int i = 0; i < messageScores.scores.Length; i++)
         {
-            scores[i] = messageScores.scores[i];
+            joueurs.Add(new Joueur(messageScores.scores[i], (Couleur)Enum.Parse(typeof(Couleur), i.ToString())));
         }
 
         aTermine = true;
+
+        joueurs.Sort(delegate (Joueur x, Joueur y)
+        {
+            return x.score.CompareTo(y.score);
+        });
     }
 
     // Update is called once per frame
@@ -48,13 +58,16 @@ public class ScoreUI : MonoBehaviour
         if (aTermine)
         {
 
-            for (int i = 0; i < scores.Length; i++)
+            for (int i = 0; i < joueurs.Count; i++)
             {
                 Debug.Log("Dans la boucle");
-                classement[i].text = "" + scores[i] + " blocs restants";
+                Couleur couleur = (Couleur)joueurs.ElementAt(i).couleurJouee + 1;
+                classement[i].text = "Joueur " + couleur + " : " + joueurs[i].score + " blocs restants";
             }
 
-        }
+            aTermine = false;
 
+        }
     }
+
 }
